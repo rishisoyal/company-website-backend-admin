@@ -76,7 +76,7 @@ export async function POST(req: NextRequest) {
       secure: true,
       sameSite: "strict",
       path: "/",
-      maxAge: 60 * 60 * 24 * 7, // 7 days
+      // maxAge: 60 * 60 * 24 * 7, // 7 days (if not set it becomes session cookie)
     });
 
     return response;
