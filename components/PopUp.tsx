@@ -1,0 +1,52 @@
+"use client";
+import { motion, AnimatePresence } from "framer-motion";
+
+export default function Popup({
+  isOpen,
+  onClose,
+  children,
+}: {
+  isOpen: boolean;
+  onClose: any;
+  children: React.ReactNode;
+}) {
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <>
+          {/* Background Overlay */}
+          <motion.div
+            className="fixed inset-0 bg-black/40 backdrop-blur-md z-40"
+            onClick={onClose}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          />
+
+          {/* Popup Wrapper */}
+          <motion.div
+            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.9, opacity: 0 }}
+          >
+            {/* Content Box */}
+            <div
+              className="bg-white rounded-2xl p-12 shadow-xl max-w-max w-full max-h-[80vh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {children}
+
+              <button
+                onClick={onClose}
+                className="mt-4 w-full cursor-pointer py-2 rounded-lg bg-black text-white active:scale-95"
+              >
+                Close
+              </button>
+            </div>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
+  );
+}
