@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import TextForm from "./TextForm";
 import Popup from "./PopUp";
 
-const TextDataTable = ({ data, page }: { data: TextData[]; page?: string }) => {
+const TextDataTable = ({ data, page }: { data: TextData[]; page: string }) => {
   const [updateIndex, setUpdateIndex] = useState(0);
   const [updateMode, setUpdateMode] = useState(false);
 
