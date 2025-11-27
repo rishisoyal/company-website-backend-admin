@@ -1,14 +1,12 @@
-import mongoose from "mongoose";
-import { NextResponse, NextRequest } from "next/server";
+import { corsHeaders } from "@/lib/cors";
+import { connectDB } from "@/lib/mongodb";
+import { createSupabaseClient } from "@/lib/supabase";
+import supabaseMediaUpload from "@/lib/supabaseMediaUpload";
 import CardContent from "@/models/CardContentModel";
 import MediaContent from "@/models/MediaContentModel";
 import TextContent from "@/models/TextContentModel";
-import { connectDB } from "@/lib/mongodb";
-import supabaseMediaUpload from "@/lib/supabaseMediaUpload";
-import { createSupabaseClient } from "@/lib/supabase";
-import { jwtVerify } from "jose";
-import User from "@/models/UserModel";
-import { corsHeaders, allowedOrigins } from "@/lib/cors";
+import mongoose from "mongoose";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function OPTIONS(req: Request) {
   const origin = req.headers.get("origin");
@@ -89,10 +87,10 @@ export async function GET(req: NextRequest) {
         { message: "could not fetch data" },
         { status: 400 }
       );
-    const res = NextResponse.json(data, { headers });
+    const res = NextResponse.json(data, {headers});
 
-    res.headers.set("Access-Control-Allow-Origin", "http://localhost:3000");
-    res.headers.set("Access-Control-Allow-Credentials", "true");
+    // res.headers.set("Access-Control-Allow-Origin", "http://localhost:3000");
+    // res.headers.set("Access-Control-Allow-Credentials", "true");
     return res;
   } catch (error) {
     return NextResponse.json(
