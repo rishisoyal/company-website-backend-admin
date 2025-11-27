@@ -87,7 +87,7 @@ export async function GET(req: NextRequest) {
         { message: "could not fetch data" },
         { status: 400 }
       );
-    const res = NextResponse.json(data, {headers});
+    const res = NextResponse.json(data, { headers });
 
     // res.headers.set("Access-Control-Allow-Origin", "http://localhost:3000");
     // res.headers.set("Access-Control-Allow-Credentials", "true");
@@ -165,28 +165,16 @@ export async function POST(req: NextRequest) {
   }
 
   if (contentType === "text") {
-    const body = await req.json();
-    console.log(body);
+    const { title, subtitle, text } = await req.json();
 
-    // if (!body.title || !body.subtitle || !body.text) {
-    //   // console.log(body.title);
-    //   return NextResponse.json(
-    //     {
-    //       message: "please provide data to update",
-    //     },
-    //     {
-    //       status: 400,
-    //     }
-    //   );
-    // }
     try {
       const data = await TextContent.findOneAndUpdate(
         { page: page },
         {
           $set: {
-            "content.$[item].title": body.title || "",
-            "content.$[item].subtitle": body.subtitle || "",
-            "content.$[item].text": body.text || "",
+            "content.$[item].title": title || "",
+            "content.$[item].subtitle": subtitle || "",
+            "content.$[item].text": text || "",
           },
         },
         {

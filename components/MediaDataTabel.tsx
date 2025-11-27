@@ -33,7 +33,7 @@ const MediaDataTable = ({
       header: "Media",
       Cell: ({ row }) => (
         <div className="flex gap-2">
-          <Image
+          <img
             width={200}
             height={20}
             src={row.original.media_path!}

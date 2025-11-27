@@ -1,5 +1,6 @@
 export const allowedOrigins = [
   "http://localhost:3000",
+  "http://localhost:8000",
   "http://localhost:5173",
   "https://company-website-frontend-woad.vercel.app",
   "https://company-website-backend-admin.vercel.app",

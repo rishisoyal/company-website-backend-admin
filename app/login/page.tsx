@@ -21,26 +21,37 @@ const Login = () => {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     try {
-      const res = await axios.post(`${BASE_API}/api/login`, {
-        name: formData.name,
-        password: formData.password,
-      });
+      const res = await axios.post(
+        `${BASE_API}/api/user/login`,
+        {
+          name: formData.name,
+          password: formData.password,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+      console.log(res);
+			if (res.status !== 200) {
+				setInvalid(true);
+				return;
+			}
     } catch (error) {
       setInvalid(true);
       return;
     }
     // console.log(res.status);
-    // if (res.status !== 200) {
-    // 	setInvalid(true);
-    // 	return;
-    // }
     return redirect("/admin");
   }
 
   return (
     <>
       <div className="flex flex-col items-center justify-center h-screen">
-        <div className={inValid ? "block text-red-800 absolute top-2 text-4xl" : "hidden"}>
+        <div
+          className={
+            inValid ? "block text-red-800 absolute top-2 text-4xl" : "hidden"
+          }
+        >
           <h1>Invalid credentials </h1>
         </div>
         <form

@@ -11,7 +11,7 @@ import {
   ContactRound,
 } from "lucide-react";
 import Link from "next/link";
-import { redirect} from "next/navigation";
+import { redirect } from "next/navigation";
 import axios from "axios";
 
 type SidebarItem = {
@@ -132,15 +132,22 @@ export default function Sidebar() {
   };
 
   async function handleLogOutClick() {
-    const res = await axios.delete(`${BASE_API}/api/logout`);
-    if (res.status === 202) {
+    const res = await axios.delete(`${BASE_API}/api/user/logout`, {
+      withCredentials: true,
+    });
+    if (res.status === 200) {
       redirect("/login");
     }
   }
 
   return (
     <aside className="left-0 w-fit lg:w-64 bg-[#181825] text-gray-200 h-screen fixed p-4 overflow-y-auto border-r border-gray-700 z-99">
-      <button onClick={handleLogOutClick} className="text-red-700 bg-red-200 backdrop-blur-2xl rounded-sm p-2 mb-6 border-black cursor-pointer border-2 hover:border-red-700">Log out</button>
+      <button
+        onClick={handleLogOutClick}
+        className="text-red-700 bg-red-200 backdrop-blur-2xl rounded-sm p-2 mb-6 border-black cursor-pointer border-2 hover:border-red-700"
+      >
+        Log out
+      </button>
       <h2 className="text-xl font-bold mb-6 hidden lg:block">Admin Panel</h2>
       {/* Burger Button (Mobile) */}
       <div

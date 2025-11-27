@@ -63,7 +63,7 @@ export default function Manage({
         withCredentials: true,
       }
     );
-    setData(res.data.content);
+    setData(res.data.data.content);
     console.log("response: ", res.data);
   }
   useEffect(() => {

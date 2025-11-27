@@ -59,7 +59,7 @@ const MediaForm = ({ data, page }: { data: MediaData; page?: string }) => {
         </h1>
         <div className="flex flex-col items-center gap-8 w-[350px] md:w-[700px]">
           <div className="preview">
-            <Image
+            <img
               width={500}
               height={400}
               src={mediaPath!}
