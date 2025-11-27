@@ -8,6 +8,13 @@ import supabaseMediaUpload from "@/lib/supabaseMediaUpload";
 import { createSupabaseClient } from "@/lib/supabase";
 import { jwtVerify } from "jose";
 import User from "@/models/UserModel";
+import { corsHeaders, allowedOrigins } from "@/lib/cors";
+
+export async function OPTIONS(req: Request) {
+  const origin = req.headers.get("origin");
+  const headers = corsHeaders(origin);
+  return new NextResponse(null, { status: 204, headers });
+}
 
 const contentTypes = ["text", "media", "card"];
 const pages = [
@@ -25,22 +32,8 @@ const contentModels: Record<string, mongoose.Model<any>> = {
 };
 
 export async function GET(req: NextRequest) {
-  // const token = req.cookies.get("auth_token")?.value;
-  // console.log(req.cookies);
-  // if (!token)
-  //   return Response.json({ error: "Not authorized" }, { status: 401 });
-
-  // const { payload } = await jwtVerify(
-  //   token,
-  //   new TextEncoder().encode(process.env.TOKEN_SECRET)
-  // );
-  // console.log(payload.uid);
-  // const user = await User.findOne({
-  //   _id: new mongoose.Types.ObjectId(payload.uid as string),
-  // });
-  // console.log({ user });
-
-  // if (!user) return Response.json({ error: "Not authorized" }, { status: 401 });
+  const origin = req.headers.get("origin");
+  const headers = corsHeaders(origin);
 
   const searchParams = req.nextUrl.searchParams;
   const page = searchParams.get("page");
@@ -96,7 +89,7 @@ export async function GET(req: NextRequest) {
         { message: "could not fetch data" },
         { status: 400 }
       );
-    const res = NextResponse.json(data);
+    const res = NextResponse.json(data, {headers});
 
     res.headers.set("Access-Control-Allow-Origin", "http://localhost:3000");
     res.headers.set("Access-Control-Allow-Credentials", "true");
