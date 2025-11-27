@@ -1,62 +1,76 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { connectDB } from "@/lib/mongodb";
-import User from "@/models/UserModel";
-import mongoose from "mongoose";
+import { jwtVerify } from "jose";
 
 export default async function createProxy(req: NextRequest) {
-  const url = new URL(req.url);
-  const { pathname } = url;
+  const pathname = req.nextUrl.pathname;
 
-  // --- 1) GLOBAL CORS FOR ALL API ROUTES ---
+  // ----------------------------
+  // 1. GLOBAL CORS FOR ALL /api
+  // ----------------------------
   if (pathname.startsWith("/api")) {
-    const res = NextResponse.next();
+    const origin = req.headers.get("origin");
 
-    res.headers.set("Access-Control-Allow-Origin", "*");
-    res.headers.set(
-      "Access-Control-Allow-Methods",
-      "GET, POST, PUT, DELETE, OPTIONS"
-    );
-    res.headers.set(
-      "Access-Control-Allow-Headers",
-      "Content-Type, Authorization"
-    );
+    const allowedOrigins = [
+      "http://localhost:3000",
+      "http://localhost:5173",
+    ];
 
-    // Handle OPTIONS preflight
+    const isAllowed = origin && allowedOrigins.includes(origin);
+
+    // ----------------------------
+    // OPTIONS (Preflight request)
+    // ----------------------------
     if (req.method === "OPTIONS") {
-      return new NextResponse(null, { status: 204, headers: res.headers });
+      return new NextResponse(null, {
+        status: 204,
+        headers: {
+          "Access-Control-Allow-Origin": isAllowed ? origin! : "",
+          "Access-Control-Allow-Credentials": "true",
+          "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+          "Access-Control-Allow-Headers": "Content-Type, Authorization",
+          Vary: "Origin",
+        },
+      });
     }
 
+    // ----------------------------
+    // NORMAL REQUESTS
+    // ----------------------------
+    const res = NextResponse.next();
+
+    if (isAllowed) {
+      res.headers.set("Access-Control-Allow-Origin", origin!);
+      res.headers.set("Vary", "Origin");
+    }
+
+    res.headers.set("Access-Control-Allow-Credentials", "true");
     return res;
   }
 
-  // --- 2) ADMIN ROUTE PROTECTION ---
+  // ----------------------------
+  // 2. PROTECT ADMIN ROUTES
+  // ----------------------------
   if (pathname.startsWith("/admin")) {
-    const sessionId = req.cookies.get("session_id")?.value;
+    const token = req.cookies.get("auth_token")?.value;
 
-    if (!sessionId) {
+    if (!token) {
       return NextResponse.redirect(new URL("/login", req.url));
     }
 
-    // DB lookup
-    await connectDB();
-
-    const user = await User.findOne({
-      session_id: new mongoose.Types.ObjectId(sessionId),
-    });
-
-    if (!user) {
+    try {
+      await jwtVerify(
+        token,
+        new TextEncoder().encode(process.env.TOKEN_SECRET)
+      );
+    } catch (err) {
       return NextResponse.redirect(new URL("/login", req.url));
     }
   }
 
-  // Default pass-through
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: [
-    "/api/:path*", // apply CORS rules
-    "/admin/:path*", // apply admin protection
-  ],
+  matcher: ["/api/:path*", "/admin/:path*"],
 };

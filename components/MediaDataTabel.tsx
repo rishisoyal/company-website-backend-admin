@@ -36,7 +36,7 @@ const MediaDataTable = ({
           <Image
             width={200}
             height={20}
-            src={row.original.media_path || ""}
+            src={row.original.media_path!}
             alt="media"
           />
         </div>

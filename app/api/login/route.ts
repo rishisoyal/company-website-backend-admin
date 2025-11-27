@@ -1,92 +1,33 @@
-export const runtime = "nodejs";
-import User from "@/models/UserModel";
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
-import { generateHash } from "@/lib/hashGenerator";
 import { connectDB } from "@/lib/mongodb";
-import mongoose from "mongoose";
+import User from "@/models/UserModel";
 import bcrypt from "bcrypt";
+import { SignJWT } from "jose";
+import { NextResponse } from "next/server";
 
-export async function POST(req: NextRequest) {
-  const body = await req.json();
-  const user_name: string = body.name;
-  const password: string = body.password;
-  if (!user_name || !password) {
-    return NextResponse.json(
-      {
-        message: "user name and password is required",
-      },
-      { status: 400 }
-    );
-  }
-  // console.log(user_name, password);
+export async function POST(req: Request) {
+  const { name, password } = await req.json();
 
-  try {
-    await connectDB();
-    const passwordHash = await generateHash(password);
-    if (!passwordHash) {
-      return NextResponse.json(
-        {
-          message: "could not generate password hash",
-        },
-        { status: 400 }
-      );
-    }
-    console.log(passwordHash);
+  await connectDB();
+  const user = await User.findOne({ name });
+  if (!user)
+    return NextResponse.json({ error: "User not found" }, { status: 401 });
+  // const passwordHash = await generateHash(password);
+  const valid = bcrypt.compare(password, user.password_hash);
+  if (!valid)
+    return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
 
-    // validate user
-    const data = await User.findOne({
-      name: user_name,
-    });
-    if (!data) {
-      return NextResponse.json(
-        {
-          message: "user not found",
-        },
-        { status: 401 }
-      );
-    }
+  const token = await new SignJWT({ uid: user._id.toString(), role: user.role })
+    .setProtectedHeader({ alg: "HS256" })
+    .setExpirationTime("2d")
+    .sign(new TextEncoder().encode(process.env.TOKEN_SECRET));
 
-    const isCorrect = await bcrypt.compare(password, data.password_hash);
+  const res = NextResponse.json({ success: true });
+  res.cookies.set("auth_token", token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",// allow navigation between same-site ports
+    path: "/",
+  });
 
-    if (!isCorrect) {
-      return NextResponse.json(
-        { message: "invalid credentials" },
-        { status: 401 }
-      );
-    }
-
-    // Generate session ID
-    const sessionId = new mongoose.Types.ObjectId();
-
-    // Save session in DB
-    await User.updateOne(
-      { _id: data._id },
-      { $set: { session_id: sessionId } }
-    );
-
-    // Create secure cookie
-    const response = NextResponse.json(
-      { message: "login successful" },
-      { status: 200 }
-    );
-
-    response.cookies.set("session_id", sessionId.toString(), {
-      httpOnly: true,
-      secure: true,
-      sameSite: "strict",
-      path: "/",
-      // maxAge: 60 * 60 * 24 * 7, // 7 days (if not set it becomes session cookie)
-    });
-
-    return response;
-  } catch (error) {
-    return NextResponse.json(
-      {
-        message: "internal error occured",
-        error: error,
-      },
-      { status: 500 }
-    );
-  }
+  return res;
 }

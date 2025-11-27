@@ -3,6 +3,7 @@ import User from "@/models/UserModel";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { generateHash } from "@/lib/hashGenerator";
+import { connectDB } from "@/lib/mongodb";
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
@@ -14,6 +15,7 @@ export async function POST(req: NextRequest) {
       { status: 400 }
     );
   }
+	await connectDB()
   const passwordHash = await generateHash(body.password);
   const user = await User.create({
     _id: new mongoose.Types.ObjectId(),

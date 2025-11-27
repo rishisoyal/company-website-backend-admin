@@ -6,6 +6,8 @@ import TextContent from "@/models/TextContentModel";
 import { connectDB } from "@/lib/mongodb";
 import supabaseMediaUpload from "@/lib/supabaseMediaUpload";
 import { createSupabaseClient } from "@/lib/supabase";
+import { jwtVerify } from "jose";
+import User from "@/models/UserModel";
 
 const contentTypes = ["text", "media", "card"];
 const pages = [
@@ -23,7 +25,25 @@ const contentModels: Record<string, mongoose.Model<any>> = {
 };
 
 export async function GET(req: NextRequest) {
-  await connectDB();
+  // const token = req.cookies.get("auth_token")?.value;
+  // console.log(req.cookies);
+  // if (!token)
+  //   return Response.json({ error: "Not authorized" }, { status: 401 });
+
+  // const { payload } = await jwtVerify(
+  //   token,
+  //   new TextEncoder().encode(process.env.TOKEN_SECRET)
+  // );
+  // console.log(payload.uid);
+  // await connectDB();
+  // const user = await User.findOne({
+  //   _id: new mongoose.Types.ObjectId(payload.uid as string),
+  // });
+  // console.log({ user });
+
+  // if (!user) return Response.json({ error: "Not authorized" }, { status: 401 });
+
+
   const searchParams = req.nextUrl.searchParams;
   const page = searchParams.get("page");
   const contentType = searchParams.get("contentType");
@@ -77,14 +97,11 @@ export async function GET(req: NextRequest) {
         { message: "could not fetch data" },
         { status: 400 }
       );
-    return NextResponse.json(
-      {
-        data: data,
-      },
-      {
-        status: 200,
-      }
-    );
+    const res = NextResponse.json(data);
+
+    res.headers.set("Access-Control-Allow-Origin", "http://localhost:3000");
+    res.headers.set("Access-Control-Allow-Credentials", "true");
+		return res
   } catch (error) {
     return NextResponse.json(
       {
@@ -159,8 +176,8 @@ export async function POST(req: NextRequest) {
 
   if (contentType === "text") {
     const body = await req.json();
-		console.log(body);
-		
+    console.log(body);
+
     // if (!body.title || !body.subtitle || !body.text) {
     //   // console.log(body.title);
     //   return NextResponse.json(

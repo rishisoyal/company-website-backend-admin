@@ -9,7 +9,6 @@ const UserScema = new mongoose.Schema({
   name: { type: String, required: true },
   password_hash: { type: String, required: true },
   role: { type: String, required: false },
-  session_id: { type: mongoose.Types.ObjectId, required: false },
 });
 
 const User = mongoose.models.user || mongoose.model("user", UserScema, "users");

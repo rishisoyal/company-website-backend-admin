@@ -1,3 +1,4 @@
+"use client";
 import type { TextData } from "../../../types/text.types";
 import axios from "axios";
 import TextDataTable from "@/components/TextDataTable";
@@ -5,15 +6,19 @@ import { MediaData } from "@/types/media.types";
 import MediaDataTable from "@/components/MediaDataTabel";
 import CardDataTable from "@/components/CardDataTable";
 import { CardData } from "@/types/card.types";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
-export default async function Manage({
-  searchParams,
-}: {
-  searchParams: Promise<{ page?: string; contentType?: string }>;
+export default function Manage({}: // searchParams,
+{
+  // searchParams: Promise<{ page?: string; contentType?: string }>;
 }) {
   const BASE_API = process.env.NEXT_PUBLIC_BASE_API;
   // console.log(await searchParams);
-  const { page, contentType } = await searchParams;
+  const searchParams = useSearchParams();
+  const page = searchParams.get("page");
+  const contentType = searchParams.get("contentType");
+  const [data, setData] = useState<TextData[] | MediaData[] | CardData[] | null>(null);
 
   if (!page || !contentType) {
     return (
@@ -47,16 +52,29 @@ export default async function Manage({
     );
   }
 
-  const res = await axios.get(
-    `${BASE_API}/api/content?page=${page}&contentType=${contentType}`
-  );
+	async function fetchData() {
+		const res = await axios.get(
+			`${BASE_API}/api/content?page=${page}&contentType=${contentType}`,
+			{
+				withCredentials: true,
+			}
+		);
+		setData(res.data.content);
+		console.log("response: ", res.data);
+	}
+  useEffect(() => {
+		async function loadData() {
+			await fetchData();
+		}
+		loadData()
+  }, [page, contentType]);
 
-  const data: TextData[] | MediaData[] | CardData[] = res.data.data.content;
+  // const data: TextData[] | MediaData[] | CardData[] = res.data.data.content;
 
   return (
     <>
       {!data ? (
-        <h1>Loading...</h1>
+        <h1 className="text-black text-2xl">Loading...</h1>
       ) : (
         <main className="ml-12 lg:ml-64 flex flex-col items-center overflow-scroll">
           <div className="container w-full max-w-[80vw]">
