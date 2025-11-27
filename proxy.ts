@@ -1,6 +1,6 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { jwtVerify } from "jose";
+// import { jwtVerify } from "jose";
 
 export default async function createProxy(req: NextRequest) {
   const pathname = req.nextUrl.pathname;
@@ -58,22 +58,22 @@ export default async function createProxy(req: NextRequest) {
   }
 
   // 2. PROTECT ADMIN ROUTES
-  if (pathname.startsWith("/admin")) {
-    const token = req.cookies.get("auth_token")?.value;
+  // if (pathname.startsWith("/admin")) {
+  //   const token = req.cookies.get("auth_token")?.value;
 
-    if (!token) {
-      return NextResponse.redirect(new URL("/login", req.url));
-    }
+  //   if (!token) {
+  //     return NextResponse.redirect(new URL("/login", req.url));
+  //   }
 
-    try {
-      await jwtVerify(
-        token,
-        new TextEncoder().encode(process.env.TOKEN_SECRET)
-      );
-    } catch (err) {
-      return NextResponse.redirect(new URL("/login", req.url));
-    }
-  }
+  //   try {
+  //     await jwtVerify(
+  //       token,
+  //       new TextEncoder().encode(process.env.TOKEN_SECRET)
+  //     );
+  //   } catch (err) {
+  //     return NextResponse.redirect(new URL("/login", req.url));
+  //   }
+  // }
 
   return NextResponse.next();
 }
