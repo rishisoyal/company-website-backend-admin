@@ -2,7 +2,7 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { jwtVerify } from "jose";
 
-export default async function middleware(req: NextRequest) {
+export default async function createProxy(req: NextRequest) {
   const pathname = req.nextUrl.pathname;
   const origin = req.headers.get("origin");
 
