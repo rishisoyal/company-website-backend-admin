@@ -89,7 +89,7 @@ export async function GET(req: NextRequest) {
         { message: "could not fetch data" },
         { status: 400 }
       );
-    const res = NextResponse.json(data, {headers});
+    const res = NextResponse.json(data, { headers });
 
     res.headers.set("Access-Control-Allow-Origin", "http://localhost:3000");
     res.headers.set("Access-Control-Allow-Credentials", "true");
