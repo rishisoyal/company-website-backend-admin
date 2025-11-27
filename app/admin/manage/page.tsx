@@ -7,18 +7,22 @@ import MediaDataTable from "@/components/MediaDataTabel";
 import CardDataTable from "@/components/CardDataTable";
 import { CardData } from "@/types/card.types";
 import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+// import { useSearchParams } from "next/navigation";
+import { use } from "react";
 
-export default function Manage({}: // searchParams,
-{
-  // searchParams: Promise<{ page?: string; contentType?: string }>;
+export default function Manage({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string; contentType?: string }>;
 }) {
   const BASE_API = process.env.NEXT_PUBLIC_BASE_API;
   // console.log(await searchParams);
-  const searchParams = useSearchParams();
-  const page = searchParams.get("page");
-  const contentType = searchParams.get("contentType");
-  const [data, setData] = useState<TextData[] | MediaData[] | CardData[] | null>(null);
+  const params = use(searchParams);
+  const page = params.page;
+  const contentType = params.contentType;
+  const [data, setData] = useState<
+    TextData[] | MediaData[] | CardData[] | null
+  >(null);
 
   if (!page || !contentType) {
     return (
@@ -52,21 +56,21 @@ export default function Manage({}: // searchParams,
     );
   }
 
-	async function fetchData() {
-		const res = await axios.get(
-			`${BASE_API}/api/content?page=${page}&contentType=${contentType}`,
-			{
-				withCredentials: true,
-			}
-		);
-		setData(res.data.content);
-		console.log("response: ", res.data);
-	}
+  async function fetchData() {
+    const res = await axios.get(
+      `${BASE_API}/api/content?page=${page}&contentType=${contentType}`,
+      {
+        withCredentials: true,
+      }
+    );
+    setData(res.data.content);
+    console.log("response: ", res.data);
+  }
   useEffect(() => {
-		async function loadData() {
-			await fetchData();
-		}
-		loadData()
+    async function loadData() {
+      await fetchData();
+    }
+    loadData();
   }, [page, contentType]);
 
   // const data: TextData[] | MediaData[] | CardData[] = res.data.data.content;
