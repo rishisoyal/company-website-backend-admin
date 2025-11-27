@@ -25,7 +25,7 @@ const CardDataTable = ({ data, page }: { data: CardData[]; page?: string }) => {
     {
       header: "Cards",
       Cell: ({ row }) => {
-        const cards = row.original.cards;
+        const cards = row.original.cards ?? [];
 
         return (
           <Disclosure>
