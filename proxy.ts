@@ -15,7 +15,7 @@ export default async function createProxy(req: NextRequest) {
       "http://localhost:3000",
       "http://localhost:5173",
       "https://company-website-backend-admin.vercel.app",
-      "https://company-website-frontend-woad.vercel.app/",
+      "https://company-website-frontend-woad.vercel.app",
     ];
 
     const isAllowed = origin && allowedOrigins.includes(origin);
