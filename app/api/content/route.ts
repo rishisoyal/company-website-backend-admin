@@ -35,14 +35,12 @@ export async function GET(req: NextRequest) {
   //   new TextEncoder().encode(process.env.TOKEN_SECRET)
   // );
   // console.log(payload.uid);
-  // await connectDB();
   // const user = await User.findOne({
   //   _id: new mongoose.Types.ObjectId(payload.uid as string),
   // });
   // console.log({ user });
 
   // if (!user) return Response.json({ error: "Not authorized" }, { status: 401 });
-
 
   const searchParams = req.nextUrl.searchParams;
   const page = searchParams.get("page");
@@ -89,6 +87,7 @@ export async function GET(req: NextRequest) {
     );
   }
 
+  await connectDB();
   const ContentModel = contentModels[contentType];
   try {
     const data = await ContentModel.findOne({ page: page });
@@ -101,7 +100,7 @@ export async function GET(req: NextRequest) {
 
     res.headers.set("Access-Control-Allow-Origin", "http://localhost:3000");
     res.headers.set("Access-Control-Allow-Credentials", "true");
-		return res
+    return res;
   } catch (error) {
     return NextResponse.json(
       {
