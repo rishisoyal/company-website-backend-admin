@@ -7,10 +7,9 @@ export async function POST(req: Request) {
 		`${process.env.NEXT_PUBLIC_BASE_API}/api/user/login`,
 		{
 			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body,
+			credentials: "include",
+			headers: { "Content-Type": "application/json" },
+			body: body,
 		},
 	);
 
