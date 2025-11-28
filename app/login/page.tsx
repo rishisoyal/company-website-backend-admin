@@ -22,7 +22,7 @@ const Login = () => {
     e.preventDefault();
     try {
       const res = await axios.post(
-        `${BASE_API}/api/user/login`,
+        `/api/proxy`,
         {
           name: formData.name,
           password: formData.password,
