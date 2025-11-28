@@ -4,6 +4,7 @@ import type { MediaData } from "../types/media.types";
 import axios from "axios";
 import Image from "next/image";
 import { FileUpload } from "primereact/fileupload";
+import { ThreeDots } from "react-loader-spinner";
 
 const MediaForm = ({ data, page }: { data: MediaData; page?: string }) => {
   const BASE_API = process.env.NEXT_PUBLIC_BASE_API;
@@ -59,12 +60,22 @@ const MediaForm = ({ data, page }: { data: MediaData; page?: string }) => {
         </h1>
         <div className="flex flex-col items-center gap-8 w-[350px] md:w-[700px]">
           <div className="preview">
-            <img
+          {mediaPath? 
+            <Image
               width={500}
               height={400}
               src={mediaPath!}
               alt="Image Preview"
             />
+          : 	<ThreeDots
+							height="80"
+							width="80"
+							radius="9"
+							color="#4fa94d"
+							ariaLabel="three-dots-loading"
+							wrapperStyle={{}}
+							visible={true}
+						/>}
           </div>
           <div className="w-full flex flex-col items-center justify-center">
             {/* <label className="text-black/70" htmlFor="title">
