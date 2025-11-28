@@ -132,7 +132,7 @@ export default function Sidebar() {
   };
 
   async function handleLogOutClick() {
-    const res = await axios.delete(`${BASE_API}/api/user/logout`, {
+    const res = await axios.delete(`/api/proxy/logout`, {
       withCredentials: true,
     });
     if (res.status === 200) {
