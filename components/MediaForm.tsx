@@ -11,19 +11,20 @@ const MediaForm = ({ data, page }: { data: MediaData; page?: string }) => {
   const [file, setFile] = useState<File | null>(null);
 
   const updateFormData = async () => {
-			setMediaPath(data.media_path);
-		};
-	
-		useEffect(() => {
-			const load = async () => {
-				await updateFormData();
-			};
-			load();
-		}, [data]);
+    setMediaPath(data.media_path);
+  };
 
-  const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
+  useEffect(() => {
+    const load = async () => {
+      await updateFormData();
+    };
+    load();
+		setMediaPath(data.media_path)
+  }, [data]);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     // console.log(formData);
-		e.preventDefault()
+    e.preventDefault();
     const formData = new FormData();
     formData.set("media", file!);
 
@@ -59,22 +60,24 @@ const MediaForm = ({ data, page }: { data: MediaData; page?: string }) => {
         </h1>
         <div className="flex flex-col items-center gap-8 w-[350px] md:w-[700px]">
           <div className="preview">
-          {mediaPath? 
-            <Image
-              width={500}
-              height={400}
-              src={mediaPath!}
-              alt="Image Preview"
-            />
-          : 	<ThreeDots
-							height="80"
-							width="80"
-							radius="9"
-							color="#4fa94d"
-							ariaLabel="three-dots-loading"
-							wrapperStyle={{}}
-							visible={true}
-						/>}
+            {mediaPath ? (
+              <Image
+                width={500}
+                height={400}
+                src={mediaPath!}
+                alt="Image Preview"
+              />
+            ) : (
+              <ThreeDots
+                height="80"
+                width="80"
+                radius="9"
+                color="#4fa94d"
+                ariaLabel="three-dots-loading"
+                wrapperStyle={{}}
+                visible={true}
+              />
+            )}
           </div>
           <div className="w-full flex flex-col items-center justify-center">
             {/* <label className="text-black/70" htmlFor="title">
@@ -84,7 +87,7 @@ const MediaForm = ({ data, page }: { data: MediaData; page?: string }) => {
               className="h-12 p-2 mt-2 text-black border-black rounded-2xl outline-none focus:border-indigo-300 cursor-pointer w-2xs text-center shadow-2xl border-2"
               type="file"
               name="media"
-							placeholder="Choose"
+              placeholder="Choose"
               // disabled={formData.title ? false : true}
               // value={mediaPath}
               onChange={(e) => handleChange(e)}
@@ -92,12 +95,12 @@ const MediaForm = ({ data, page }: { data: MediaData; page?: string }) => {
             />
           </div>
         </div>
-      <button
-        // type="submit"
-        className="mt-5 bg-indigo-600 text-white h-12 w-56 px-4 rounded active:scale-95 transition cursor-pointer"
-      >
-        Update
-      </button>
+        <button
+          // type="submit"
+          className="mt-5 bg-indigo-600 text-white h-12 w-56 px-4 rounded active:scale-95 transition cursor-pointer"
+        >
+          Update
+        </button>
       </form>
     </>
   );
