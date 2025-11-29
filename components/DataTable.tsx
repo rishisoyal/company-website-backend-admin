@@ -1,5 +1,5 @@
+"use client";
 import { MaterialReactTable, type MRT_ColumnDef } from "material-react-table";
-
 export default function DataTable({
   columns,
   data,

@@ -1,10 +1,9 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import type { MediaData } from "../types/media.types";
 import axios from "axios";
 import Image from "next/image";
-import { FileUpload } from "primereact/fileupload";
+import React, { useEffect, useState } from "react";
 import { ThreeDots } from "react-loader-spinner";
+import type { MediaData } from "../types/media.types";
 
 const MediaForm = ({ data, page }: { data: MediaData; page?: string }) => {
   const BASE_API = process.env.NEXT_PUBLIC_BASE_API;
