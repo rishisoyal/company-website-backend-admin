@@ -17,17 +17,6 @@ const CardForm = ({ data, page }: { data: CardData; page?: string }) => {
     });
   };
 
-  const updateFormData = async () => {
-    setCardData(data.cards);
-  };
-
-  useEffect(() => {
-    const load = async () => {
-      await updateFormData();
-    };
-    load();
-  }, [data]);
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     // console.log(formData);
     e.preventDefault();

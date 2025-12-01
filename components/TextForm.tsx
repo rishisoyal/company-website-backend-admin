@@ -22,21 +22,6 @@ const TextForm = ({ data, page }: { data: TextData; page: string }) => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const updateFormData = async () => {
-    setFormData({
-      title: data.title || "",
-      subtitle: data.subtitle || "",
-      text: data.text || "",
-    });
-  };
-
-  useEffect(() => {
-    const load = async () => {
-      await updateFormData();
-    };
-    load();
-  }, [data]);
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     // console.log(formData);
     e.preventDefault();

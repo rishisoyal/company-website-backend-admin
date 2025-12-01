@@ -1,14 +1,14 @@
 "use client";
 import axios from "axios";
 import {
-    Building2,
-    CardSim,
-    ChevronDown,
-    ChevronRight,
-    CircleUserRound,
-    ContactRound,
-    Home,
-    Lightbulb,
+  Building2,
+  CardSim,
+  ChevronDown,
+  ChevronRight,
+  CircleUserRound,
+  ContactRound,
+  Home,
+  Lightbulb,
 } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -148,7 +148,7 @@ export default function Sidebar() {
       >
         Log out
       </button>
-      <h2 className="text-xl font-bold mb-6 hidden lg:block">Admin Panel</h2>
+      {/* <h2 className="text-xl font-bold mb-6 hidden lg:block">Admin Panel</h2> */}
       {/* Burger Button (Mobile) */}
       <div
         className="block lg:hidden cursor-pointer text-latte-text text-3xl"
@@ -158,6 +158,13 @@ export default function Sidebar() {
       </div>
 
       <nav className="space-y-2 hidden lg:block">
+        <Link
+          href="/admin"
+          className="text-xl text-center block px-2 py-1  rounded hover:bg-gray-700/30 transition"
+        >
+					Admin Home
+        </Link>
+				<div className="mt-3 text-2xl text-center"	>Edit Section</div>
         {menu.map((item) => (
           <div key={item.title}>
             <button
@@ -198,6 +205,12 @@ export default function Sidebar() {
           openSideBar ? "max-w-64 opacity-100" : "max-w-0 opacity-0"
         }`}
       >
+        <Link
+          href={"/admin"}
+          className="block px-2 py-1 text-sm rounded hover:bg-gray-700/30 transition"
+        >
+          Admin
+        </Link>
         {menu.map((item) => (
           <div key={item.title}>
             <button

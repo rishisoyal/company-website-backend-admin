@@ -21,7 +21,7 @@ export default function Popup({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-          />
+						/>
 
           {/* Popup Wrapper */}
           <motion.div
@@ -29,6 +29,7 @@ export default function Popup({
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
+            onClick={onClose}
           >
             {/* Content Box */}
             <div
