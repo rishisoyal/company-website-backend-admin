@@ -67,7 +67,7 @@ export default function Manage({
     setData(res.data.data.content);
   }
   useEffect(() => {
-		setData(null);
+    setData(null);
     async function loadData() {
       await fetchData();
     }
@@ -83,7 +83,9 @@ export default function Manage({
   return (
     <>
       {!data ? (
-        <h1 className="text-black text-2xl">Loading...</h1>
+        <div className="flex text-black text-4xl items-center justify-center h-screen w-full ml-30">
+          Loading...
+        </div>
       ) : (
         <main className="ml-12 lg:ml-64 flex flex-col items-center overflow-scroll">
           <div className="container w-full max-w-[80vw]">
