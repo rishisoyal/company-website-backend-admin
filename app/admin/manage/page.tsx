@@ -9,6 +9,7 @@ import { CardData } from "@/types/card.types";
 import { JSX, useEffect, useState } from "react";
 // import { useSearchParams } from "next/navigation";
 import { use } from "react";
+import { TailSpin } from "react-loader-spinner";
 
 export default function Manage({
   searchParams,
@@ -84,7 +85,8 @@ export default function Manage({
     <>
       {!data ? (
         <div className="flex text-black text-4xl items-center justify-center h-screen w-full ml-30">
-          Loading...
+          {/* Loading... */}
+					<TailSpin/>
         </div>
       ) : (
         <main className="ml-12 lg:ml-64 flex flex-col items-center overflow-scroll">
