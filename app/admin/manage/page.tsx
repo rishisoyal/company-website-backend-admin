@@ -6,7 +6,7 @@ import { MediaData } from "@/types/media.types";
 import MediaDataTable from "@/components/MediaDataTabel";
 import CardDataTable from "@/components/CardDataTable";
 import { CardData } from "@/types/card.types";
-import { useEffect, useState } from "react";
+import { JSX, useEffect, useState } from "react";
 // import { useSearchParams } from "next/navigation";
 import { use } from "react";
 
@@ -65,16 +65,20 @@ export default function Manage({
       },
     });
     setData(res.data.data.content);
-    console.log("response: ", res.data);
   }
   useEffect(() => {
+		setData(null);
     async function loadData() {
       await fetchData();
     }
     loadData();
   }, [page, contentType]);
 
-  // const data: TextData[] | MediaData[] | CardData[] = res.data.data.content;
+  const contentDataTables: Record<string, React.ReactNode> = {
+    text: <TextDataTable data={data as TextData[]} page={page} />,
+    media: <MediaDataTable data={data as MediaData[]} page={page} />,
+    card: <CardDataTable data={data as CardData[]} page={page} />,
+  };
 
   return (
     <>
@@ -83,17 +87,7 @@ export default function Manage({
       ) : (
         <main className="ml-12 lg:ml-64 flex flex-col items-center overflow-scroll">
           <div className="container w-full max-w-[80vw]">
-            {contentType === "text" ? (
-              <TextDataTable data={data as TextData[]} page={page} />
-            ) : contentType === "media" ? (
-              <MediaDataTable data={data as MediaData[]} page={page} />
-            ) : contentType === "card" ? (
-              <CardDataTable data={data as CardData[]} page={page} />
-            ) : (
-              <h1 className="text-9xl w-full text-center">
-                Unknown content type {contentType}
-              </h1>
-            )}
+            {contentDataTables[contentType]}
           </div>
         </main>
       )}
