@@ -1,15 +1,13 @@
 "use client";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 
-export default function Popup({
-  isOpen,
-  onClose,
-  children,
-}: {
+type Props = {
   isOpen: boolean;
   onClose: any;
   children: React.ReactNode;
-}) {
+};
+
+export default function Popup({ isOpen, onClose, children }: Props) {
   return (
     <AnimatePresence>
       {isOpen && (
@@ -21,7 +19,7 @@ export default function Popup({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-						/>
+          />
 
           {/* Popup Wrapper */}
           <motion.div

@@ -2,10 +2,9 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 import AnalyticsCard from "@/components/AnalyticsCard";
-import React from "react";
-import { RealTimeData, GeneralStats, Metrics } from "@/types/analytics.types";
 import BChart from "@/components/AnalyticsChart";
 import AnalyticsTable from "@/components/AnalyticsTable";
+import { GeneralStats, Metrics, RealTimeData } from "@/types/analytics.types";
 
 export default async function Analytics() {
   const BASE_API = process.env.NEXT_PUBLIC_BASE_API;

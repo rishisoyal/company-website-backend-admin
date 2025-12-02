@@ -1,39 +1,33 @@
 "use client";
 import axios from "axios";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { ThreeDots } from "react-loader-spinner";
-import type { MediaData } from "../types/media.types";
+import type { MediaData } from "../types/content.types";
 
-export default function MediaForm({
-  data,
-  page,
-}: {
+type Props = {
   data: MediaData;
-  page?: string;
-}) {
+  page: string;
+};
+
+export default function MediaForm({ data, page }: Props) {
   const BASE_API = process.env.NEXT_PUBLIC_BASE_API;
   const [mediaPath, setMediaPath] = useState(data.media_path);
   const [file, setFile] = useState<File | null>(null);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    // console.log(formData);
     e.preventDefault();
     const formData = new FormData();
     formData.set("media", file!);
 
-    const res = await axios.post(
-      `${BASE_API}/api/content`,
-      formData,
-      {
-        headers: { "Content-Type": "multipart/form-data" },
-        params: {
-          page,
-          contentType: "media",
-          blockType: data.block_type,
-        },
-      }
-    );
+    const res = await axios.post(`${BASE_API}/api/content`, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+      params: {
+        page,
+        contentType: "media",
+        blockType: data.block_type,
+      },
+    });
 
     console.log(res);
     if (res.status !== 201) {
@@ -79,9 +73,6 @@ export default function MediaForm({
             )}
           </div>
           <div className="w-full flex flex-col items-center justify-center">
-            {/* <label className="text-black/70" htmlFor="title">
-              Media
-            </label> */}
             <input
               className="h-12 p-2 mt-2 text-black border-black rounded-2xl outline-none focus:border-indigo-300 cursor-pointer w-2xs text-center shadow-2xl border-2"
               type="file"
@@ -92,7 +83,7 @@ export default function MediaForm({
           </div>
         </div>
         <button
-          // type="submit"
+          type="submit"
           className="mt-5 bg-indigo-600 text-white h-12 w-56 px-4 rounded active:scale-95 transition cursor-pointer"
         >
           Update

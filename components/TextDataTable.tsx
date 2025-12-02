@@ -1,12 +1,14 @@
 "use client";
+import { TextData } from "@/types/content.types";
 import { MRT_ColumnDef } from "material-react-table";
-import { TextData } from "@/types/text.types";
-import DataTable from "./DataTable";
 import { useEffect, useState } from "react";
-import TextForm from "./TextForm";
+import DataTable from "./DataTable";
 import Popup from "./PopUp";
+import TextForm from "./TextForm";
 
-const TextDataTable = ({ data, page }: { data: TextData[]; page: string }) => {
+type Props = { data: TextData[]; page: string };
+
+const TextDataTable = ({ data, page }: Props) => {
   const [updateIndex, setUpdateIndex] = useState(0);
   const [updateMode, setUpdateMode] = useState(false);
 
@@ -17,10 +19,8 @@ const TextDataTable = ({ data, page }: { data: TextData[]; page: string }) => {
   const handleUpdate = async (row_index: number) => {
     setUpdateIndex(row_index);
     setUpdateMode(true);
-    // console.log(textData[updateIndex]);
   };
   const columns: MRT_ColumnDef<TextData>[] = [
-    // { accessorKey: "_id", header: "ID" },
     { accessorKey: "block_type", header: "Block Type" },
     { accessorKey: "title", header: "Title" },
     { accessorKey: "subtitle", header: "Subtitle" },
@@ -44,7 +44,7 @@ const TextDataTable = ({ data, page }: { data: TextData[]; page: string }) => {
     <>
       <DataTable columns={columns} data={data} />
       {
-        <Popup isOpen={updateMode} onClose={()=>setUpdateMode(false)}>
+        <Popup isOpen={updateMode} onClose={() => setUpdateMode(false)}>
           <TextForm data={data[updateIndex]} page={page} />
         </Popup>
       }

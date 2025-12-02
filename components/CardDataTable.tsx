@@ -1,13 +1,18 @@
 "use client";
-import { MRT_ColumnDef } from "material-react-table";
-import DataTable from "./DataTable";
-import { useEffect, useState } from "react";
-import { CardData } from "@/types/card.types";
+import { CardData } from "@/types/content.types";
 import { Disclosure } from "@headlessui/react";
+import { MRT_ColumnDef } from "material-react-table";
+import { useEffect, useState } from "react";
 import CardForm from "./CardForm";
+import DataTable from "./DataTable";
 import Popup from "./PopUp";
 
-const CardDataTable = ({ data, page }: { data: CardData[]; page?: string }) => {
+type Props = {
+	data: CardData[];
+	page: string;
+};
+
+const CardDataTable = ({ data, page }: Props) => {
   const [updateIndex, setUpdateIndex] = useState(0);
   const [updateMode, setUpdateMode] = useState(false);
 
@@ -20,7 +25,6 @@ const CardDataTable = ({ data, page }: { data: CardData[]; page?: string }) => {
     setUpdateMode(true);
   };
   const columns: MRT_ColumnDef<CardData>[] = [
-    // { accessorKey: "_id", header: "ID" },
     { accessorKey: "block_type", header: "Block Type" },
     {
       header: "Cards",
@@ -52,6 +56,16 @@ const CardDataTable = ({ data, page }: { data: CardData[]; page?: string }) => {
                           <strong>Subtitle:</strong> {card.subtitle}
                         </div>
                       )}
+                      {card.more_info && (
+                        <div>
+                          <b>{card.more_info.heading}</b>
+                          <ul>
+                            {card.more_info.points.map((point) => (
+                              <li key={point}>▪️{point}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
                     </div>
                   ))}
                 </Disclosure.Panel>
@@ -80,7 +94,7 @@ const CardDataTable = ({ data, page }: { data: CardData[]; page?: string }) => {
       <DataTable columns={columns} data={data} />
       {
         <Popup isOpen={updateMode} onClose={() => setUpdateMode(false)}>
-          <CardForm data={data[updateIndex]} page={page} />
+          <CardForm data={data[updateIndex]} page={page!} />
         </Popup>
       }
     </>

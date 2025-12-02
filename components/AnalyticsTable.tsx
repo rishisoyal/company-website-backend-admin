@@ -1,16 +1,14 @@
-'use client'
-import { DataTable } from "primereact/datatable";
+"use client";
 import { Column } from "primereact/column";
+import { DataTable } from "primereact/datatable";
 
-export default function AnalyticsTable({
-  title,
-  columns,
-  data,
-}: {
+type Props = {
   title: string;
   columns: string[];
   data: any;
-}) {
+};
+
+export default function AnalyticsTable({ title, columns, data }: Props) {
   const header = (
     <div className="pt-4 pb-4 flex flex-wrap align-items-center justify-content-between gap-2">
       <span className="text-xl text-900 font-bold">{title}</span>

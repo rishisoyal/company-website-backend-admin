@@ -1,13 +1,10 @@
 "use client";
-import type { TextData } from "../../../types/text.types";
-import axios from "axios";
-import TextDataTable from "@/components/TextDataTable";
-import { MediaData } from "@/types/media.types";
-import MediaDataTable from "@/components/MediaDataTabel";
 import CardDataTable from "@/components/CardDataTable";
-import { CardData } from "@/types/card.types";
-import { JSX, useEffect, useState } from "react";
-// import { useSearchParams } from "next/navigation";
+import MediaDataTable from "@/components/MediaDataTabel";
+import TextDataTable from "@/components/TextDataTable";
+import { CardData, MediaData, TextData } from "@/types/content.types";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { use } from "react";
 import { TailSpin } from "react-loader-spinner";
 

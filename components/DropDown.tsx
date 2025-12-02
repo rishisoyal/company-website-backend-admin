@@ -1,5 +1,5 @@
-import React, { useState } from "react";
 import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
+import { useState } from "react";
 
 interface City {
   name: string;

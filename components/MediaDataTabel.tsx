@@ -1,20 +1,19 @@
 "use client";
+import type { MediaData } from "@/types/content.types";
 import { MRT_ColumnDef } from "material-react-table";
-import DataTable from "./DataTable";
-import { useEffect, useState } from "react";
-import MediaForm from "./MediaForm";
-import type { MediaData } from "@/types/media.types";
 import Image from "next/image";
-import Popup from "./PopUp";
+import { useEffect, useState } from "react";
 import { ThreeDots } from "react-loader-spinner";
+import DataTable from "./DataTable";
+import MediaForm from "./MediaForm";
+import Popup from "./PopUp";
 
-const MediaDataTable = ({
-  data,
-  page,
-}: {
+type Props = {
   data: MediaData[];
-  page?: string;
-}) => {
+  page: string;
+};
+
+const MediaDataTable = ({ data, page }: Props) => {
   const [updateIndex, setUpdateIndex] = useState(0);
   const [updateMode, setUpdateMode] = useState(false);
 
@@ -25,10 +24,8 @@ const MediaDataTable = ({
   const handleUpdate = async (row_index: number) => {
     setUpdateIndex(row_index);
     setUpdateMode(true);
-    // console.log(textData[updateIndex]);
   };
   const columns: MRT_ColumnDef<MediaData>[] = [
-    // { accessorKey: "_id", header: "ID" },
     { accessorKey: "block_type", header: "Block Type" },
     {
       header: "Media",

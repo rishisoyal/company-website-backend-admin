@@ -1,12 +1,12 @@
 "use client";
 import { MaterialReactTable, type MRT_ColumnDef } from "material-react-table";
-export default function DataTable({
-  columns,
-  data,
-}: {
+
+type Props = {
   columns: MRT_ColumnDef<any>[];
   data: any[];
-}) {
+};
+
+export default function DataTable({ columns, data }: Props) {
   return (
     <MaterialReactTable
       columns={columns}
