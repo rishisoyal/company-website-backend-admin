@@ -27,9 +27,16 @@ const TextForm = ({ data, page }: { data: TextData; page: string }) => {
     e.preventDefault();
 
     const res = await axios.post(
-      `${BASE_API}/api/content?page=${page}&blockType=${data.block_type}&contentType=text`,
+      `${BASE_API}/api/content`,
       {
         ...formData,
+      },
+      {
+        params: {
+          page,
+          contentType: "text",
+          blockType: data.block_type,
+        },
       }
     );
 

@@ -160,11 +160,11 @@ export default function Sidebar() {
       <nav className="space-y-2 hidden lg:block">
         <Link
           href="/admin"
-          className="text-xl text-center block px-2 py-1  rounded hover:bg-gray-700/30 transition"
+          className="text-xl text-left block px-2 py-1  rounded hover:bg-gray-700/30 transition"
         >
 					Admin Home
         </Link>
-				<div className="mt-3 text-2xl text-center"	>Edit Section</div>
+				<div className="mt-3 text-2xl text-left px-2"	>Edit Section</div>
         {menu.map((item) => (
           <div key={item.title}>
             <button

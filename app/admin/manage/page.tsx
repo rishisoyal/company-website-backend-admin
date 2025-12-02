@@ -57,12 +57,13 @@ export default function Manage({
   }
 
   async function fetchData() {
-    const res = await axios.get(
-      `${BASE_API}/api/content?page=${page}&contentType=${contentType}`,
-      {
-        withCredentials: true,
-      }
-    );
+    const res = await axios.get(`${BASE_API}/api/content`, {
+      withCredentials: true,
+      params: {
+        page,
+        contentType,
+      },
+    });
     setData(res.data.data.content);
     console.log("response: ", res.data);
   }

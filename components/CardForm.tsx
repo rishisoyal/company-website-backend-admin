@@ -21,9 +21,16 @@ const CardForm = ({ data, page }: { data: CardData; page?: string }) => {
     // console.log(formData);
     e.preventDefault();
     const res = await axios.post(
-      `${BASE_API}/api/content?page=${page}&blockType=${data.block_type}&contentType=card`,
+      `${BASE_API}/api/content`,
       {
         cards: cardData,
+      },
+      {
+        params: {
+          page,
+          contentType: "card",
+          blockType: data.block_type,
+        },
       }
     );
 
