@@ -1,42 +1,80 @@
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 import AnalyticsCard from "@/components/AnalyticsCard";
 import React from "react";
-import axios from "axios";
 import { RealTimeData, GeneralStats, Metrics } from "@/types/analytics.types";
 import BChart from "@/components/AnalyticsChart";
 import AnalyticsTable from "@/components/AnalyticsTable";
 
 export default async function Analytics() {
   const BASE_API = process.env.NEXT_PUBLIC_BASE_API;
-  let res = await axios.get(`${BASE_API}/api/analytics/realtime`);
-  const realTimeData: RealTimeData = res.data.realTimeData;
-  const pathVisitors: { Path: string; Visitors: string }[] = [];
-  for (const path in realTimeData.urls) {
-    pathVisitors.push({
-      Path: path,
-      Visitors: realTimeData.urls[path].toString(),
-    });
-  }
-  const referrerVisitors: { Referrer: string; Visitors: string }[] = [];
-  for (const referrer in realTimeData.referrers) {
-    referrerVisitors.push({
-      Referrer: referrer,
-      Visitors: realTimeData.referrers[referrer].toString(),
-    });
-  }
-  res = await axios.get(`${BASE_API}/api/analytics/stats`);
-  const generalStats: GeneralStats = res.data.generalStats;
 
-  res = await axios.get(`${BASE_API}/api/analytics/metrics?type=os`);
-  const OSMetrics: Metrics[] = res.data.metrics;
-  res = await axios.get(`${BASE_API}/api/analytics/metrics?type=device`);
-  const deviceMetrics: Metrics[] = res.data.metrics;
-  res = await axios.get(`${BASE_API}/api/analytics/metrics?type=browser`);
-  const browserMetrics: Metrics[] = res.data.metrics;
+  // -----------------------------
+  // 1. Parallel data fetching
+  // -----------------------------
+  const [
+    realtimeRes,
+    statsRes,
+    osRes,
+    deviceRes,
+    browserRes,
+  ] = await Promise.all([
+    fetch(`${BASE_API}/api/analytics/realtime`, { cache: "no-store" }),
+    fetch(`${BASE_API}/api/analytics/stats`, { cache: "no-store" }),
+    fetch(`${BASE_API}/api/analytics/metrics?type=os`, { cache: "no-store" }),
+    fetch(`${BASE_API}/api/analytics/metrics?type=device`, {
+      cache: "no-store",
+    }),
+    fetch(`${BASE_API}/api/analytics/metrics?type=browser`, {
+      cache: "no-store",
+    }),
+  ]);
 
+  // -----------------------------
+  // 2. Parse JSON in parallel
+  // -----------------------------
+  const [
+    realtimeJSON,
+    statsJSON,
+    osJSON,
+    deviceJSON,
+    browserJSON,
+  ] = await Promise.all([
+    realtimeRes.json(),
+    statsRes.json(),
+    osRes.json(),
+    deviceRes.json(),
+    browserRes.json(),
+  ]);
+
+  const realTimeData: RealTimeData = realtimeJSON.realTimeData;
+  const generalStats: GeneralStats = statsJSON.generalStats;
+
+  const OSMetrics: Metrics[] = osJSON.metrics;
+  const deviceMetrics: Metrics[] = deviceJSON.metrics;
+  const browserMetrics: Metrics[] = browserJSON.metrics;
+
+  // -----------------------------
+  // 3. Prepare table data
+  // -----------------------------
+  const pathVisitors = Object.entries(realTimeData.urls).map(([path, val]) => ({
+    Path: path,
+    Visitors: val.toString(),
+  }));
+
+  const referrerVisitors = Object.entries(realTimeData.referrers).map(
+    ([ref, val]) => ({
+      Referrer: ref,
+      Visitors: val.toString(),
+    })
+  );
+
+  // -----------------------------
+  // 4. Helpers
+  // -----------------------------
   function msTimeFormat(ms: number) {
-    let s = Math.floor(ms / 1000);
-
-    return `${s}`;
+    return Math.floor(ms / 1000).toString();
   }
 
   return (
@@ -46,31 +84,19 @@ export default async function Analytics() {
           <h2 className="text-[#181825] text-4xl text-left w-full pl-4 pt-4">
             Overview
           </h2>
+
           <div className="p-4 pt-0 flex gap-4 w-full">
-            <AnalyticsCard
-              title="Page view"
-              data={generalStats.pageviews.toString()}
-            />
-            <AnalyticsCard
-              title="Visitors"
-              data={generalStats.visitors.toString()}
-            />
-            <AnalyticsCard
-              title="Visits"
-              data={generalStats.visits.toString()}
-            />
-            <AnalyticsCard
-              title="Bounce rate"
-              data={`${generalStats.bounces.toString()}%`}
-            />
-            <AnalyticsCard
-              title="Total time"
-              data={msTimeFormat(generalStats.totaltime)}
-            />
+            <AnalyticsCard title="Page view" data={generalStats.pageviews.toString()} />
+            <AnalyticsCard title="Visitors" data={generalStats.visitors.toString()} />
+            <AnalyticsCard title="Visits" data={generalStats.visits.toString()} />
+            <AnalyticsCard title="Bounce rate" data={`${generalStats.bounces.toString()}%`} />
+            <AnalyticsCard title="Total time" data={msTimeFormat(generalStats.totaltime)} />
           </div>
+
           <h2 className="text-[#181825] text-4xl text-left w-full pl-4 pt-4">
             Real Time
           </h2>
+
           <div className="p-4 pt-0 flex gap-4 w-full">
             <AnalyticsCard
               title="Views"
@@ -91,16 +117,8 @@ export default async function Analytics() {
           </div>
 
           <div className="flex gap-4 w-full p-4 pt-0">
-            <AnalyticsTable
-              title="Pages"
-              columns={["Path", "Visitors"]}
-              data={pathVisitors}
-            />
-            <AnalyticsTable
-              title="Refferrers"
-              columns={["Referrer", "Visitors"]}
-              data={referrerVisitors}
-            />
+            <AnalyticsTable title="Pages" columns={["Path", "Visitors"]} data={pathVisitors} />
+            <AnalyticsTable title="Refferrers" columns={["Referrer", "Visitors"]} data={referrerVisitors} />
           </div>
         </div>
 
@@ -110,19 +128,17 @@ export default async function Analytics() {
             yAxis={[{ data: OSMetrics.map((val) => val.y) }]}
           />
         </div>
+
         <div className="p-4 w-full flex items-center justify-end">
           <BChart
-            xAxis={[
-              { label: "Device", data: deviceMetrics.map((val) => val.x) },
-            ]}
+            xAxis={[{ label: "Device", data: deviceMetrics.map((val) => val.x) }]}
             yAxis={[{ data: deviceMetrics.map((val) => val.y) }]}
           />
         </div>
+
         <div className="p-4 w-full flex items-center justify-end">
           <BChart
-            xAxis={[
-              { label: "Browser", data: browserMetrics.map((val) => val.x) },
-            ]}
+            xAxis={[{ label: "Browser", data: browserMetrics.map((val) => val.x) }]}
             yAxis={[{ data: browserMetrics.map((val) => val.y) }]}
           />
         </div>
