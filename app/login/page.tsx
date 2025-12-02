@@ -10,8 +10,8 @@ const Login = () => {
     name: "",
     password: "",
   });
-
   const [inValid, setInvalid] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -20,6 +20,7 @@ const Login = () => {
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+		setLoading(true)
     try {
       const res = await axios.post(
         `/api/proxy/login`,
@@ -32,10 +33,10 @@ const Login = () => {
         }
       );
       console.log(res);
-			if (res.status !== 200) {
-				setInvalid(true);
-				return;
-			}
+      if (res.status !== 200) {
+        setInvalid(true);
+        return;
+      }
     } catch (error) {
       setInvalid(true);
       return;
@@ -57,7 +58,9 @@ const Login = () => {
         <form
           method="POST"
           onSubmit={handleSubmit}
-          className="sm:w-[350px] w-full text-center border border-gray-300/60 rounded-2xl px-8 bg-white p-5 shadow-2xl"
+          className={`sm:w-[350px] w-full text-center border border-gray-300/60 rounded-2xl px-8 bg-white p-5 shadow-2xl transition-all duration-500 ${
+            loading ? "loading-box" : ""
+          }`}
         >
           <h1 className="text-gray-900 text-3xl mt-10 font-medium">Login</h1>
           <div className="flex items-center mt-6 w-full text-black bg-white border border-gray-300/80 h-12 rounded-full overflow-hidden pl-6 gap-2">
