@@ -123,7 +123,7 @@ const CardForm = ({ data, page }: Props) => {
                   </label>
                   {card.more_info.points.map((point, p_index) => (
                     <input
-                      key={point}
+                      key={p_index}
                       className="h-12 p-2 mt-2 w-full border text-black border-gray-500/30 rounded outline-none focus:border-indigo-300"
                       type="text"
                       name="more_info.point"
