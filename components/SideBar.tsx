@@ -123,7 +123,6 @@ const menu: SidebarItem[] = [
 ];
 
 export default function Sidebar() {
-  const BASE_API = process.env.NEXT_PUBLIC_BASE_API;
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const [openSideBar, setOpenSideBar] = useState(false);
 
@@ -144,7 +143,7 @@ export default function Sidebar() {
     <aside className="left-0 w-fit lg:w-64 bg-[#181825] text-gray-200 h-screen fixed p-4 overflow-y-auto border-r border-gray-700 z-99">
       <button
         onClick={handleLogOutClick}
-        className="text-red-700 bg-red-200 backdrop-blur-2xl rounded-sm p-2 mb-6 border-black cursor-pointer border-2 hover:border-red-700"
+        className="text-red-700 bg-red-200 backdrop-blur-2xl rounded-sm p-2 mb-6 border-black cursor-pointer border-2 hover:border-red-700 w-full hidden lg:block"
       >
         Log out
       </button>
@@ -205,11 +204,17 @@ export default function Sidebar() {
           openSideBar ? "max-w-64 opacity-100" : "max-w-0 opacity-0"
         }`}
       >
+				<button
+        onClick={handleLogOutClick}
+        className="text-red-700 bg-red-200 backdrop-blur-2xl rounded-sm p-2 mb-6 border-black cursor-pointer border-2 hover:border-red-700 w-full "
+      >
+        Log out
+      </button>
         <Link
           href={"/admin"}
           className="block px-2 py-1 text-sm rounded hover:bg-gray-700/30 transition"
         >
-          Admin
+          Admin Home
         </Link>
         {menu.map((item) => (
           <div key={item.title}>

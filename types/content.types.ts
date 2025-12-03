@@ -23,5 +23,5 @@ export type TextData = {
 export type MediaData = {
   _id: string;
   block_type: string;
-  media_path?: string;
+  media_path: string;
 };

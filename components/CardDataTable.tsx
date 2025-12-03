@@ -6,10 +6,11 @@ import { useEffect, useState } from "react";
 import CardForm from "./CardForm";
 import DataTable from "./DataTable";
 import Popup from "./PopUp";
+import { FaRegEdit } from "react-icons/fa";
 
 type Props = {
-	data: CardData[];
-	page: string;
+  data: CardData[];
+  page: string;
 };
 
 const CardDataTable = ({ data, page }: Props) => {
@@ -81,9 +82,9 @@ const CardDataTable = ({ data, page }: Props) => {
         <div className="flex gap-2">
           <button
             onClick={() => handleUpdate(row.index)}
-            className="px-4 py-1 bg-blue-500 text-white rounded-md text-[18px] cursor-pointer"
+            className="p-2 bg-blue-500 text-white rounded-md text-[24px] cursor-pointer"
           >
-            Update
+            <FaRegEdit />
           </button>
         </div>
       ),

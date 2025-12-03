@@ -31,7 +31,7 @@ export default function Popup({ isOpen, onClose, children }: Props) {
           >
             {/* Content Box */}
             <div
-              className="bg-white rounded-2xl p-12 shadow-xl max-w-max w-full max-h-[80vh] overflow-y-auto"
+              className="bg-white rounded-2xl p-12 shadow-xl max-w-max w-full max-h-[80vh] overflow-y-auto ml-34"
               onClick={(e) => e.stopPropagation()}
             >
               {children}

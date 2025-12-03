@@ -16,7 +16,7 @@ export default function AnalyticsTable({ title, columns, data }: Props) {
   );
 
   return (
-    <div className="card bg-[#181825] rounded-xl text-white p-6 w-full">
+    <div className="card bg-[#181825] border-4 border-black rounded-xl text-white p-6 w-full">
       <DataTable
         value={data}
         header={header}
