@@ -16,6 +16,7 @@
     "@mui/x-charts": "^8.20.0",
     "@supabase/supabase-js": "^2.84.0",
     "@umami/api-client": "^0.80.0",
+    "animate.css": "^4.1.1",
     "axios": "^1.13.2",
     "bcrypt": "^6.0.0",
     "cloudinary": "^2.8.0",

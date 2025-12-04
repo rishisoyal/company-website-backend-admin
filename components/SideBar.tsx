@@ -1,5 +1,7 @@
 "use client";
+import "animate.css";
 import axios from "axios";
+import { AnimatePresence, motion } from "framer-motion";
 import {
   Building2,
   CardSim,
@@ -161,9 +163,11 @@ export default function Sidebar() {
           href="/admin"
           className="text-xl text-left block px-2 py-1  rounded hover:bg-gray-700/30 transition"
         >
-					Admin Home
+          Admin Home
         </Link>
-				<div className="mt-3 text-2xl text-left px-2"	>Edit Section</div>
+        <div className="mt-3 text-2xl text-left px-2 text-blue-300">
+          Edit Section
+        </div>
         {menu.map((item) => (
           <div key={item.title}>
             <button
@@ -181,20 +185,26 @@ export default function Sidebar() {
                 <ChevronRight size={16} />
               )}
             </button>
-
-            {openMenu === item.title && item.children && (
-              <div className="ml-8 mt-1 space-y-1">
-                {item.children.map((sub) => (
-                  <Link
-                    key={sub.title}
-                    href={sub.path}
-                    className="block px-2 py-1 text-sm rounded hover:bg-gray-700/30 transition"
-                  >
-                    {sub.title}
-                  </Link>
-                ))}
-              </div>
-            )}
+            <AnimatePresence>
+              {openMenu === item.title && item.children && (
+                <motion.div
+                  initial={{ height: 0 }}
+                  animate={{ height: "fit-content" }}
+                  exit={{ height: 0 }}
+                  className="ml-8 mt-1 space-y-1 overflow-hidden"
+                >
+                  {item.children.map((sub) => (
+                    <Link
+                      key={sub.title}
+                      href={sub.path}
+                      className="block px-2 py-1 text-sm rounded hover:bg-gray-700/30 transition"
+                    >
+                      {sub.title}
+                    </Link>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         ))}
       </nav>
@@ -204,12 +214,12 @@ export default function Sidebar() {
           openSideBar ? "max-w-64 opacity-100" : "max-w-0 opacity-0"
         }`}
       >
-				<button
-        onClick={handleLogOutClick}
-        className="text-red-700 bg-red-200 backdrop-blur-2xl rounded-sm p-2 mb-6 border-black cursor-pointer border-2 hover:border-red-700 w-full "
-      >
-        Log out
-      </button>
+        <button
+          onClick={handleLogOutClick}
+          className="text-red-700 bg-red-200 backdrop-blur-2xl rounded-sm p-2 mb-6 border-black cursor-pointer border-2 hover:border-red-700 w-full "
+        >
+          Log out
+        </button>
         <Link
           href={"/admin"}
           className="block px-2 py-1 text-sm rounded hover:bg-gray-700/30 transition"

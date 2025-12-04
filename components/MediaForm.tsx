@@ -73,10 +73,18 @@ export default function MediaForm({ data, page }: Props) {
             )}
           </div>
           <div className="w-full flex flex-col items-center justify-center">
+            <label
+              htmlFor="media"
+              className="flex items-center justify-center w-max p-4 cursor-pointer border-2 rounded-xl text-black font-bold text-xl hover:text-white hover:bg-black transition-all duration-200"
+            >
+              Choose a file
+            </label>
             <input
-              className="h-12 p-2 mt-2 text-black border-black rounded-2xl outline-none focus:border-indigo-300 cursor-pointer w-2xs text-center shadow-2xl border-2"
+              className="hidden"
+							accept="image/gif"
               type="file"
               name="media"
+              id="media"
               onChange={(e) => handleChange(e)}
               required
             />

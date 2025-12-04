@@ -3,6 +3,8 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+	--animate-duration: 100ms;
+  --animate-delay: 0s;
 }
 
 @theme inline {
@@ -73,4 +75,17 @@ body {
   height: calc(100% - 12px);
   background: white;
   border-radius: 5px;
+}
+
+.animate_width_down{
+	animation: animate_width_down .2s linear 0s 1;
+}
+
+@keyframes animate_width_down {
+	0%{
+		height: 0;
+	}
+	100%{
+		height: 100;
+	}
 }
