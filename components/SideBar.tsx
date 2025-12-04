@@ -1,6 +1,5 @@
 "use client";
 import "animate.css";
-import axios from "axios";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Building2,
@@ -133,8 +132,9 @@ export default function Sidebar() {
   };
 
   async function handleLogOutClick() {
-    const res = await axios.delete(`/api/proxy/logout`, {
-      withCredentials: true,
+    const res = await fetch(`/api/proxy/logout`, {
+      method: "DELETE",
+      credentials: "include",
     });
     if (res.status === 200) {
       redirect("/login");

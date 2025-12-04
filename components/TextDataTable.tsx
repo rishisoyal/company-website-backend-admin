@@ -7,9 +7,16 @@ import Popup from "./PopUp";
 import TextForm from "./TextForm";
 import { FaRegEdit } from "react-icons/fa";
 
-type Props = { data: TextData[]; page: string };
+type Props = {
+  data: TextData[];
+  page: string
+  /**
+   * Callback function to fetch updated data
+   */;
+  refreshData: () => void;
+};
 
-const TextDataTable = ({ data, page }: Props) => {
+const TextDataTable = ({ data, page, refreshData }: Props) => {
   const [updateIndex, setUpdateIndex] = useState(0);
   const [updateMode, setUpdateMode] = useState(false);
 
@@ -31,11 +38,11 @@ const TextDataTable = ({ data, page }: Props) => {
       Cell: ({ row }) => (
         <div className="flex gap-2">
           <button
-											onClick={() => handleUpdate(row.index)}
-											className="p-2 bg-blue-500 text-white rounded-md text-[24px] cursor-pointer"
-										>
-											<FaRegEdit/>
-										</button>
+            onClick={() => handleUpdate(row.index)}
+            className="p-2 bg-blue-500 text-white rounded-md text-[24px] cursor-pointer"
+          >
+            <FaRegEdit />
+          </button>
         </div>
       ),
     },
@@ -46,7 +53,11 @@ const TextDataTable = ({ data, page }: Props) => {
       <DataTable columns={columns} data={data} />
       {
         <Popup isOpen={updateMode} onClose={() => setUpdateMode(false)}>
-          <TextForm data={data[updateIndex]} page={page} />
+          <TextForm
+            data={data[updateIndex]}
+            page={page}
+            refreshData={refreshData}
+          />
         </Popup>
       }
     </>

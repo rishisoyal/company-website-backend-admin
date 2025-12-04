@@ -3,7 +3,7 @@ import CardDataTable from "@/components/CardDataTable";
 import MediaDataTable from "@/components/MediaDataTabel";
 import TextDataTable from "@/components/TextDataTable";
 import { CardData, MediaData, TextData } from "@/types/content.types";
-import axios from "axios";
+import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { use } from "react";
 import { TailSpin } from "react-loader-spinner";
@@ -55,14 +55,13 @@ export default function Manage({
   }
 
   async function fetchData() {
-    const res = await axios.get(`${BASE_API}/api/content`, {
-      withCredentials: true,
-      params: {
-        page,
-        contentType,
-      },
-    });
-    setData(res.data.data.content);
+    const res = await fetch(
+      `${BASE_API}/api/content?page=${page}&contentType=${contentType}`,
+      {
+        credentials: "include",
+      }
+    );
+    setData((await res.json()).data.content);
   }
   useEffect(() => {
     setData(null);
@@ -73,9 +72,27 @@ export default function Manage({
   }, [page, contentType]);
 
   const contentDataTables: Record<string, React.ReactNode> = {
-    text: <TextDataTable data={data as TextData[]} page={page} />,
-    media: <MediaDataTable data={data as MediaData[]} page={page} />,
-    card: <CardDataTable data={data as CardData[]} page={page} />,
+    text: (
+      <TextDataTable
+        data={data as TextData[]}
+        page={page}
+        refreshData={async () => await fetchData()}
+      />
+    ),
+    media: (
+      <MediaDataTable
+        data={data as MediaData[]}
+        page={page}
+        refreshData={async () => await fetchData()}
+      />
+    ),
+    card: (
+      <CardDataTable
+        data={data as CardData[]}
+        page={page}
+        refreshData={async () => await fetchData()}
+      />
+    ),
   };
 
   return (
@@ -83,12 +100,19 @@ export default function Manage({
       {!data ? (
         <div className="flex text-black text-4xl items-center justify-center h-screen w-full ml-30">
           {/* Loading... */}
-					<TailSpin/>
+          <TailSpin />
         </div>
       ) : (
-        <main className="ml-12 lg:ml-64 flex flex-col items-center overflow-scroll">
+        <main key={contentType} className="ml-12 lg:ml-64 flex flex-col items-center overflow-scroll">
           <div className="container w-full max-w-[80vw]">
-            {contentDataTables[contentType]}
+            <AnimatePresence>
+              <motion.div
+                initial={{ opacity: 0, transitionDuration: "1s" }}
+                animate={{ opacity: 1 }}
+              >
+                {contentDataTables[contentType]}
+              </motion.div>
+            </AnimatePresence>
           </div>
         </main>
       )}

@@ -4,13 +4,21 @@ import Image from "next/image";
 import React, { useState } from "react";
 import { ThreeDots } from "react-loader-spinner";
 import type { MediaData } from "../types/content.types";
+import ToastNotification from "./ToastNotification";
 
 type Props = {
   data: MediaData;
   page: string;
+	/**
+	 * Callback function to fetch updated data
+	 */
+  refreshData: () => void;
 };
 
-export default function MediaForm({ data, page }: Props) {
+export default function MediaForm({ data, page, refreshData }: Props) {
+  const [toastType, setToastType] = useState<
+    "success" | "error" | "warning" | "info"
+  >();
   const BASE_API = process.env.NEXT_PUBLIC_BASE_API;
   const [mediaPath, setMediaPath] = useState(data.media_path);
   const [file, setFile] = useState<File | null>(null);
@@ -30,10 +38,13 @@ export default function MediaForm({ data, page }: Props) {
     });
 
     console.log(res);
-    if (res.status !== 201) {
+    if (res.status !== 200) {
       console.log("update failed");
+			setToastType("error")
       return;
     }
+		setToastType("success")
+		refreshData()
   }
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -43,6 +54,13 @@ export default function MediaForm({ data, page }: Props) {
 
   return (
     <>
+      {toastType === "success" ? (
+        <ToastNotification type="success" message="Successfully updated data" />
+      ) : toastType === "warning" ? (
+        <ToastNotification type="error" message="Could not updated data" />
+      ) : (
+        ""
+      )}
       <form
         method="POST"
         onSubmit={handleSubmit}

@@ -7,13 +7,18 @@ import CardForm from "./CardForm";
 import DataTable from "./DataTable";
 import Popup from "./PopUp";
 import { FaRegEdit } from "react-icons/fa";
+import { AnimatePresence, motion } from "framer-motion";
 
 type Props = {
   data: CardData[];
   page: string;
+  /**
+   * Callback function to fetch updated data
+   */
+  refreshData: () => void;
 };
 
-const CardDataTable = ({ data, page }: Props) => {
+const CardDataTable = ({ data, page, refreshData }: Props) => {
   const [updateIndex, setUpdateIndex] = useState(0);
   const [updateMode, setUpdateMode] = useState(false);
 
@@ -95,7 +100,11 @@ const CardDataTable = ({ data, page }: Props) => {
       <DataTable columns={columns} data={data} />
       {
         <Popup isOpen={updateMode} onClose={() => setUpdateMode(false)}>
-          <CardForm data={data[updateIndex]} page={page!} />
+          <CardForm
+            data={data[updateIndex]}
+            page={page!}
+            refreshData={refreshData}
+          />
         </Popup>
       }
     </>

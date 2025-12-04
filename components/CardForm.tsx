@@ -2,13 +2,21 @@
 import { CardData } from "@/types/content.types";
 import axios from "axios";
 import React, { useState } from "react";
+import ToastNotification from "./ToastNotification";
 
 type Props = {
   data: CardData;
   page: string;
+	/**
+	 * Callback function to fetch updated data
+	 */
+  refreshData: () => void;
 };
 
-const CardForm = ({ data, page }: Props) => {
+const CardForm = ({ data, page, refreshData }: Props) => {
+	const [toastType, setToastType] = useState<
+    "success" | "error" | "warning" | "info"
+  >();
   const BASE_API = process.env.NEXT_PUBLIC_BASE_API;
   const [cardData, setCardData] = useState(data.cards);
 
@@ -52,12 +60,22 @@ const CardForm = ({ data, page }: Props) => {
     console.log(res);
     if (res.status !== 201) {
       console.log("update failed");
+			setToastType("error")
       return;
     }
+		setToastType("success")
+		refreshData()
   }
 
   return (
     <>
+		{toastType === "success" ? (
+        <ToastNotification type="success" message="Successfully updated data" />
+      ) : toastType === "warning" ? (
+        <ToastNotification type="error" message="Could not updated data" />
+      ) : (
+        ""
+      )}
       <form
         method="POST"
         onSubmit={handleSubmit}

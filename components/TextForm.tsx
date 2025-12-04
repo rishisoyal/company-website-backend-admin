@@ -2,13 +2,21 @@
 import axios from "axios";
 import React, { useState } from "react";
 import type { TextData } from "../types/content.types";
+import ToastNotification from "./ToastNotification";
 
 type Props = {
   data: TextData;
   page: string;
+	/**
+	 * Callback function to fetch updated data
+	 */
+  refreshData: () => void;
 };
 
-const TextForm = ({ data, page }: Props) => {
+const TextForm = ({ data, page, refreshData }: Props) => {
+  const [toastType, setToastType] = useState<
+    "success" | "error" | "warning" | "info"
+  >();
   const BASE_API = process.env.NEXT_PUBLIC_BASE_API;
   const [formData, setFormData] = useState({
     title: data.title,
@@ -29,29 +37,35 @@ const TextForm = ({ data, page }: Props) => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const res = await axios.post(
-      `${BASE_API}/api/content`,
+    const res = await fetch(
+      `${BASE_API}/api/content?page=${page}&contentType=text&blockType=${data.block_type}`,
       {
-        ...formData,
-      },
-      {
-        params: {
-          page,
-          contentType: "text",
-          blockType: data.block_type,
-        },
+        method: "POST",
+        body: JSON.stringify({ ...formData }),
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
       }
     );
 
     console.log(res);
     if (res.status !== 201) {
       console.log("update failed");
+      setToastType("error");
       return;
     }
+    setToastType("success");
+		refreshData()
   };
 
   return (
     <>
+      {toastType === "success" ? (
+        <ToastNotification type="success" message="Successfully updated data" />
+      ) : toastType === "warning" ? (
+        <ToastNotification type="error" message="Could not updated data" />
+      ) : (
+        ""
+      )}
       <form
         method="POST"
         onSubmit={handleSubmit}

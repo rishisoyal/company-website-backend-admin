@@ -12,9 +12,13 @@ import { FaRegEdit } from "react-icons/fa";
 type Props = {
   data: MediaData[];
   page: string;
+	/**
+	 * Callback function to fetch updated data
+	 */
+  refreshData: () => void;
 };
 
-const MediaDataTable = ({ data, page }: Props) => {
+const MediaDataTable = ({ data, page, refreshData }: Props) => {
   const [updateIndex, setUpdateIndex] = useState(0);
   const [updateMode, setUpdateMode] = useState(false);
 
@@ -75,7 +79,7 @@ const MediaDataTable = ({ data, page }: Props) => {
       <DataTable columns={columns} data={data} />
       {
         <Popup isOpen={updateMode} onClose={() => setUpdateMode(false)}>
-          <MediaForm data={data[updateIndex]} page={page} />
+          <MediaForm data={data[updateIndex]} page={page} refreshData={refreshData} />
         </Popup>
       }
     </>
