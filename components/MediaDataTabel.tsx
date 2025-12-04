@@ -33,11 +33,14 @@ const MediaDataTable = ({ data, page }: Props) => {
       Cell: ({ row }) => (
         <div className="flex gap-2">
           {row.original.media_path ? (
-            <Image
+            <video
               width={200}
               height={20}
+							autoPlay={true}
+        muted={true}
+        loop={true}
+        playsInline={true}
               src={row.original.media_path!}
-              alt="media"
             />
           ) : (
             <ThreeDots

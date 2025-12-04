@@ -54,11 +54,14 @@ export default function MediaForm({ data, page }: Props) {
         <div className="flex flex-col items-center gap-8 w-[350px] md:w-[700px]">
           <div className="preview">
             {mediaPath ? (
-              <Image
+              <video
+                autoPlay={true}
+                muted={true}
+                loop={true}
+                playsInline={true}
                 width={500}
                 height={400}
                 src={mediaPath!}
-                alt="Image Preview"
               />
             ) : (
               <ThreeDots
@@ -81,7 +84,7 @@ export default function MediaForm({ data, page }: Props) {
             </label>
             <input
               className="hidden"
-							accept="image/gif"
+              accept="video/webm"
               type="file"
               name="media"
               id="media"
