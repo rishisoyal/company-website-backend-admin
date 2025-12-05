@@ -42,7 +42,7 @@ const MediaDataTable = ({ data, page, refreshData }: Props) => {
               muted={true}
               loop={true}
               preload="auto"
-              poster="../loading.png"
+              poster="../loading.gif"
               playsInline={true}
               src={row.original.media_path!}
               className="max-w-50 max-h-30 object-cover bg-transparent"

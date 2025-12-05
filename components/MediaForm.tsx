@@ -93,7 +93,7 @@ export default function MediaForm({ data, page, refreshData }: Props) {
                 loop={true}
                 playsInline={true}
                 preload="auto"
-                poster="../loading.png"
+                poster="../loading.gif"
                 width={500}
                 height={400}
                 src={mediaPath!}
