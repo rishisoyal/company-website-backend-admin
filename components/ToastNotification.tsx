@@ -24,7 +24,7 @@ export default function ToastNotification({ type, message }: Props) {
     <div className="z-999999">
       <Snackbar
         open={open}
-        autoHideDuration={4000}
+        autoHideDuration={3000}
         onClose={handleClose}
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
       >

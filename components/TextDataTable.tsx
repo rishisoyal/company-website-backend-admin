@@ -2,10 +2,10 @@
 import { TextData } from "@/types/content.types";
 import { MRT_ColumnDef } from "material-react-table";
 import { useEffect, useState } from "react";
+import { FaRegEdit } from "react-icons/fa";
 import DataTable from "./DataTable";
 import Popup from "./PopUp";
 import TextForm from "./TextForm";
-import { FaRegEdit } from "react-icons/fa";
 
 type Props = {
   data: TextData[];

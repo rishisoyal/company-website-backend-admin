@@ -112,7 +112,7 @@ export default async function Analytics() {
   // SECURE RENDER — Now your UI can NEVER crash on Vercel
   // ----------------------------------------------------
   return (
-    <main className="ml-12 lg:ml-64 flex flex-col items-center overflow-scroll min-h-screen justify-between">
+    <main className="ml-12 lg:ml-64 flex flex-col items-center overflow-scroll min-h-screen justify-between animate__animated animate__fadeIn">
       <div className="w-full flex flex-col items-center justify-evenly h-screen">
         <div className="w-full flex flex-col gap-2">
           <h2 className="text-[#181825] text-4xl text-left w-full pl-4 pt-4">

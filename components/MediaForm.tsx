@@ -1,17 +1,15 @@
 "use client";
 import axios from "axios";
-import Image from "next/image";
 import React, { useState } from "react";
-import { ThreeDots } from "react-loader-spinner";
 import type { MediaData } from "../types/content.types";
 import ToastNotification from "./ToastNotification";
 
 type Props = {
   data: MediaData;
   page: string;
-	/**
-	 * Callback function to fetch updated data
-	 */
+  /**
+   * Callback function to fetch updated data
+   */
   refreshData: () => void;
 };
 
@@ -25,6 +23,11 @@ export default function MediaForm({ data, page, refreshData }: Props) {
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (!file) {
+      setToastType("error");
+      return;
+    }
+
     const formData = new FormData();
     formData.set("media", file!);
 
@@ -40,11 +43,11 @@ export default function MediaForm({ data, page, refreshData }: Props) {
     console.log(res);
     if (res.status !== 200) {
       console.log("update failed");
-			setToastType("error")
+      setToastType("error");
       return;
     }
-		setToastType("success")
-		refreshData()
+    setToastType("success");
+    refreshData();
   }
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -56,8 +59,11 @@ export default function MediaForm({ data, page, refreshData }: Props) {
     <>
       {toastType === "success" ? (
         <ToastNotification type="success" message="Successfully updated data" />
-      ) : toastType === "warning" ? (
+      ) : toastType === "error" ? (
+				<>
         <ToastNotification type="error" message="Could not updated data" />
+				{/* {setToastType(null)} */}
+				</>
       ) : (
         ""
       )}
@@ -71,25 +77,18 @@ export default function MediaForm({ data, page, refreshData }: Props) {
         </h1>
         <div className="flex flex-col items-center gap-8 w-[350px] md:w-[700px]">
           <div className="preview">
-            {mediaPath ? (
+            {mediaPath && (
               <video
                 autoPlay={true}
                 muted={true}
                 loop={true}
                 playsInline={true}
+                preload="auto"
+                poster="../loading.png"
                 width={500}
                 height={400}
                 src={mediaPath!}
-              />
-            ) : (
-              <ThreeDots
-                height="80"
-                width="80"
-                radius="9"
-                color="#4fa94d"
-                ariaLabel="three-dots-loading"
-                wrapperStyle={{}}
-                visible={true}
+                className="max-w-100 max-h-70 object-cover bg-transparent"
               />
             )}
           </div>
@@ -107,13 +106,12 @@ export default function MediaForm({ data, page, refreshData }: Props) {
               name="media"
               id="media"
               onChange={(e) => handleChange(e)}
-              required
             />
           </div>
         </div>
         <button
           type="submit"
-          className="mt-5 bg-indigo-600 text-white h-12 w-56 px-4 rounded active:scale-95 transition cursor-pointer"
+          className="mt-5 bg-indigo-600 text-white h-12 w-56 px-4 rounded active:scale-95 transition cursor-pointer hover:scale-105"
         >
           Update
         </button>

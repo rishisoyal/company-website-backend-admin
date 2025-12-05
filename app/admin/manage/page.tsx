@@ -3,18 +3,15 @@ import CardDataTable from "@/components/CardDataTable";
 import MediaDataTable from "@/components/MediaDataTabel";
 import TextDataTable from "@/components/TextDataTable";
 import { CardData, MediaData, TextData } from "@/types/content.types";
-import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useState } from "react";
-import { use } from "react";
+import { use, useEffect, useState } from "react";
 import { TailSpin } from "react-loader-spinner";
 
-export default function Manage({
-  searchParams,
-}: {
+type Props = {
   searchParams: Promise<{ page?: string; contentType?: string }>;
-}) {
+};
+
+export default function Manage({ searchParams }: Props) {
   const BASE_API = process.env.NEXT_PUBLIC_BASE_API;
-  // console.log(await searchParams);
   const params = use(searchParams);
   const page = params.page;
   const contentType = params.contentType;
@@ -103,16 +100,9 @@ export default function Manage({
           <TailSpin />
         </div>
       ) : (
-        <main key={contentType} className="ml-12 lg:ml-64 flex flex-col items-center overflow-scroll">
-          <div className="container w-full max-w-[80vw]">
-            <AnimatePresence>
-              <motion.div
-                initial={{ opacity: 0, transitionDuration: "1s" }}
-                animate={{ opacity: 1 }}
-              >
-                {contentDataTables[contentType]}
-              </motion.div>
-            </AnimatePresence>
+        <main className="ml-12 lg:ml-64 flex flex-col items-center overflow-scroll">
+          <div className="container w-full max-w-[80vw] animate__animated animate__fadeIn">
+            {contentDataTables[contentType]}
           </div>
         </main>
       )}

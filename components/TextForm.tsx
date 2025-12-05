@@ -1,5 +1,4 @@
 "use client";
-import axios from "axios";
 import React, { useState } from "react";
 import type { TextData } from "../types/content.types";
 import ToastNotification from "./ToastNotification";
@@ -7,9 +6,9 @@ import ToastNotification from "./ToastNotification";
 type Props = {
   data: TextData;
   page: string;
-	/**
-	 * Callback function to fetch updated data
-	 */
+  /**
+   * Callback function to fetch updated data
+   */
   refreshData: () => void;
 };
 
@@ -54,7 +53,7 @@ const TextForm = ({ data, page, refreshData }: Props) => {
       return;
     }
     setToastType("success");
-		refreshData()
+    refreshData();
   };
 
   return (
@@ -121,7 +120,7 @@ const TextForm = ({ data, page, refreshData }: Props) => {
         </div>
         <button
           type="submit"
-          className="mt-5 bg-indigo-600 text-white h-12 w-56 px-4 rounded active:scale-95 transition cursor-pointer"
+          className="mt-5 bg-indigo-600 text-white h-12 w-56 px-4 rounded active:scale-95 transition cursor-pointer hover:scale-105"
         >
           Update
         </button>

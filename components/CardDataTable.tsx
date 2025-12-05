@@ -3,11 +3,10 @@ import { CardData } from "@/types/content.types";
 import { Disclosure } from "@headlessui/react";
 import { MRT_ColumnDef } from "material-react-table";
 import { useEffect, useState } from "react";
+import { FaRegEdit } from "react-icons/fa";
 import CardForm from "./CardForm";
 import DataTable from "./DataTable";
 import Popup from "./PopUp";
-import { FaRegEdit } from "react-icons/fa";
-import { AnimatePresence, motion } from "framer-motion";
 
 type Props = {
   data: CardData[];

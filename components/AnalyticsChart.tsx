@@ -1,5 +1,4 @@
 "use client";
-
 import { BarChart } from "@mui/x-charts/BarChart";
 
 type Props = {
