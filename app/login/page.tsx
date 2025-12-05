@@ -92,10 +92,11 @@ const Login = () => {
               type="text"
               name="name"
               placeholder="Name"
-              className="border-none outline-none ring-0"
+              className="border-none outline-none ring-0 disabled:blur-xl"
               value={formData.name}
               onChange={handleChange}
               required={true}
+              disabled={loading}
             />
           </div>
 
@@ -105,10 +106,11 @@ const Login = () => {
               type="password"
               name="password"
               placeholder="Password"
-              className="border-none outline-none ring-0"
+              className="border-none outline-none ring-0 disabled:blur-xl"
               value={formData.password}
               onChange={handleChange}
               required={true}
+              disabled={loading}
             />
           </div>
           {/* <div className="mt-4 text-left text-indigo-500">

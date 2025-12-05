@@ -50,6 +50,7 @@ export default function MediaForm({ data, page, refreshData }: Props) {
       return;
     }
     setToastType("success");
+		setFile(null)
     refreshData();
   }
 
