@@ -10,6 +10,7 @@ import {
   ContactRound,
   Home,
   Lightbulb,
+  ShieldUser,
 } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -161,11 +162,15 @@ export default function Sidebar() {
       <nav className="space-y-2 hidden lg:block">
         <Link
           href="/admin"
-          className="text-xl text-left block px-2 py-1  rounded hover:bg-gray-700/30 transition"
+          className="flex items-center justify-between w-full px-3 py-2 rounded-lg hover:bg-gray-700/40 transition cursor-pointer"
         >
-          Admin Home
+          <div className="flex items-center gap-2">
+            <ShieldUser size={20} />
+            Admin
+          </div>
+          <ChevronRight size={16} />
         </Link>
-        <div className="mt-3 text-2xl text-left px-2 text-blue-300">
+        <div className="mt-6 text-2xl text-left px-2 text-blue-300">
           Edit Section
         </div>
         {menu.map((item) => (
