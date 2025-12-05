@@ -15,8 +15,8 @@ type Props = {
 
 const CardForm = ({ data, page, refreshData }: Props) => {
   const [toastType, setToastType] = useState<
-    "success" | "error" | "warning" | "info"
-  >();
+    "success" | "error" | "warning" | "info" | null
+  >(null);
   const BASE_API = process.env.NEXT_PUBLIC_BASE_API;
   const [cardData, setCardData] = useState(data.cards);
 
@@ -43,6 +43,7 @@ const CardForm = ({ data, page, refreshData }: Props) => {
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+		setToastType(null)
     const res = await axios.post(
       `${BASE_API}/api/content`,
       {
@@ -60,27 +61,18 @@ const CardForm = ({ data, page, refreshData }: Props) => {
     console.log(res);
     if (res.status !== 201) {
       console.log("update failed");
-      await toggleToastNotification("error");
+      setToastType("error");
       return;
     }
-    await toggleToastNotification("success");
+    setToastType("success");
     refreshData();
-  }
-
-  async function toggleToastNotification(
-    type: "success" | "error" | "warning" | "info"
-  ) {
-    setToastType(type);
-    setTimeout(() => {
-      setToastType(undefined);
-    }, 3000);
   }
 
   return (
     <>
       {toastType === "success" ? (
         <ToastNotification type="success" message="Successfully updated data" />
-      ) : toastType === "warning" ? (
+      ) : toastType === "error" ? (
         <ToastNotification type="error" message="Could not updated data" />
       ) : (
         ""

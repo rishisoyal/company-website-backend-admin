@@ -15,16 +15,19 @@ type Props = {
 
 export default function MediaForm({ data, page, refreshData }: Props) {
   const [toastType, setToastType] = useState<
-    "success" | "error" | "warning" | "info"
-  >();
+    "success" | "error" | "warning" | "info" | null
+  >(null);
   const BASE_API = process.env.NEXT_PUBLIC_BASE_API;
   const [mediaPath, setMediaPath] = useState(data.media_path);
   const [file, setFile] = useState<File | null>(null);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    setToastType((prev) => (prev !== null ? null : prev));
     e.preventDefault();
     if (!file) {
-      await toggleToastNotification("error");
+      requestAnimationFrame(() => {
+        setToastType("warning"); // fire again on next frame
+      });
       return;
     }
 
@@ -43,20 +46,11 @@ export default function MediaForm({ data, page, refreshData }: Props) {
     console.log(res);
     if (res.status !== 200) {
       console.log("update failed");
-      await toggleToastNotification("error");
+      setToastType("error");
       return;
     }
-    await toggleToastNotification("success");
+    setToastType("success");
     refreshData();
-  }
-
-	 async function toggleToastNotification(
-    type: "success" | "error" | "warning" | "info"
-  ) {
-    setToastType(type);
-    setTimeout(() => {
-      setToastType(undefined);
-    }, 3000);
   }
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -69,10 +63,9 @@ export default function MediaForm({ data, page, refreshData }: Props) {
       {toastType === "success" ? (
         <ToastNotification type="success" message="Successfully updated data" />
       ) : toastType === "error" ? (
-				<>
         <ToastNotification type="error" message="Could not updated data" />
-				{/* {setToastType(null)} */}
-				</>
+      ) : toastType === "warning" ? (
+        <ToastNotification type="warning" message="No new file uploaded" />
       ) : (
         ""
       )}

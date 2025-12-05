@@ -14,8 +14,8 @@ type Props = {
 
 const TextForm = ({ data, page, refreshData }: Props) => {
   const [toastType, setToastType] = useState<
-    "success" | "error" | "warning" | "info"
-  >();
+    "success" | "error" | "warning" | "info" | null
+  >(null);
   const BASE_API = process.env.NEXT_PUBLIC_BASE_API;
   const [formData, setFormData] = useState({
     title: data.title,
@@ -35,7 +35,7 @@ const TextForm = ({ data, page, refreshData }: Props) => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+    setToastType(null);
     const res = await fetch(
       `${BASE_API}/api/content?page=${page}&contentType=text&blockType=${data.block_type}`,
       {
@@ -49,28 +49,19 @@ const TextForm = ({ data, page, refreshData }: Props) => {
     console.log(res);
     if (res.status !== 201) {
       console.log("update failed");
-      await toggleToastNotification("error");
+      setToastType("error");
       return;
     }
-    await toggleToastNotification("success");
+    setToastType("success");
     refreshData();
   };
-
-	 async function toggleToastNotification(
-    type: "success" | "error" | "warning" | "info"
-  ) {
-    setToastType(type);
-    setTimeout(() => {
-      setToastType(undefined);
-    }, 3000);
-  }
 
   return (
     <>
       {toastType === "success" ? (
         <ToastNotification type="success" message="Successfully updated data" />
-      ) : toastType === "warning" ? (
-        <ToastNotification type="error" message="Could not updated data" />
+      ) : toastType === "error" ? (
+        <ToastNotification type="error" message="Could not update data" />
       ) : (
         ""
       )}

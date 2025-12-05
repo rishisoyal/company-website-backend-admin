@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { PersonStandingIcon, LockIcon } from "lucide-react";
 import axios from "axios";
 import { redirect } from "next/navigation";
+import ToastNotification from "@/components/ToastNotification";
 
 const Login = () => {
   const BASE_API = process.env.NEXT_PUBLIC_BASE_API;
@@ -10,7 +11,7 @@ const Login = () => {
     name: "",
     password: "",
   });
-  const [inValid, setInvalid] = useState(false);
+  const [invalid, setInvalid] = useState(false);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -20,7 +21,7 @@ const Login = () => {
         const res = await axios.get(`/api/proxy/auth`, {
           withCredentials: true,
         });
-				console.log(res);
+        console.log(res);
         if (res.status !== 202) {
           setLoading(false);
           return;
@@ -42,6 +43,7 @@ const Login = () => {
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    setInvalid(false);
     setLoading(true);
     try {
       const res = await axios.post(
@@ -57,26 +59,25 @@ const Login = () => {
       console.log(res);
       if (res.status !== 200) {
         setInvalid(true);
+        setLoading(false);
         return;
       }
     } catch (error) {
       setInvalid(true);
+      setLoading(false);
       return;
     }
     // console.log(res.status);
+    setInvalid(false);
     return redirect("/admin");
   }
 
   return (
     <>
       <div className="flex flex-col items-center justify-center h-screen">
-        <div
-          className={
-            inValid ? "block text-red-800 absolute top-2 text-4xl" : "hidden"
-          }
-        >
-          <h1>Invalid credentials </h1>
-        </div>
+        {invalid && (
+          <ToastNotification type="error" message="Invalid credentails" />
+        )}
         <form
           method="POST"
           onSubmit={handleSubmit}
