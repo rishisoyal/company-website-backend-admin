@@ -17,9 +17,10 @@ const Login = () => {
     async function checkIfUserAlreadyLogedIn() {
       setLoading(true);
       try {
-        const res = await axios.get(`${BASE_API}/api/user/auth`, {
+        const res = await axios.get(`/api/proxy/auth`, {
           withCredentials: true,
         });
+				console.log(res);
         if (res.status !== 202) {
           setLoading(false);
           return;
