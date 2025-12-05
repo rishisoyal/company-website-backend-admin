@@ -92,7 +92,7 @@ const Login = () => {
               type="text"
               name="name"
               placeholder="Name"
-              className="border-none outline-none ring-0 disabled:blur-xl"
+              className="border-none outline-none ring-0 disabled:opacity-50"
               value={formData.name}
               onChange={handleChange}
               required={true}
@@ -106,7 +106,7 @@ const Login = () => {
               type="password"
               name="password"
               placeholder="Password"
-              className="border-none outline-none ring-0 disabled:blur-xl"
+              className="border-none outline-none ring-0 disabled:opacity-50"
               value={formData.password}
               onChange={handleChange}
               required={true}
