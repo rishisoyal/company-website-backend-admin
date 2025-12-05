@@ -24,7 +24,7 @@ export default function MediaForm({ data, page, refreshData }: Props) {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!file) {
-      setToastType("error");
+      await toggleToastNotification("error");
       return;
     }
 
@@ -43,11 +43,20 @@ export default function MediaForm({ data, page, refreshData }: Props) {
     console.log(res);
     if (res.status !== 200) {
       console.log("update failed");
-      setToastType("error");
+      await toggleToastNotification("error");
       return;
     }
-    setToastType("success");
+    await toggleToastNotification("success");
     refreshData();
+  }
+
+	 async function toggleToastNotification(
+    type: "success" | "error" | "warning" | "info"
+  ) {
+    setToastType(type);
+    setTimeout(() => {
+      setToastType(undefined);
+    }, 3000);
   }
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {

@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PersonStandingIcon, LockIcon } from "lucide-react";
 import axios from "axios";
 import { redirect } from "next/navigation";
@@ -13,6 +13,27 @@ const Login = () => {
   const [inValid, setInvalid] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    async function checkIfUserAlreadyLogedIn() {
+      setLoading(true);
+      try {
+        const res = await axios.get(`${BASE_API}/api/user/auth`, {
+          withCredentials: true,
+        });
+        if (res.status !== 202) {
+          setLoading(false);
+          return;
+        }
+      } catch (error) {
+        setLoading(false);
+        return;
+      }
+      // console.log(res.status);
+      return redirect("/admin");
+    }
+    checkIfUserAlreadyLogedIn();
+  }, []);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -20,7 +41,7 @@ const Login = () => {
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-		setLoading(true)
+    setLoading(true);
     try {
       const res = await axios.post(
         `/api/proxy/login`,

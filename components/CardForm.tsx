@@ -7,14 +7,14 @@ import ToastNotification from "./ToastNotification";
 type Props = {
   data: CardData;
   page: string;
-	/**
-	 * Callback function to fetch updated data
-	 */
+  /**
+   * Callback function to fetch updated data
+   */
   refreshData: () => void;
 };
 
 const CardForm = ({ data, page, refreshData }: Props) => {
-	const [toastType, setToastType] = useState<
+  const [toastType, setToastType] = useState<
     "success" | "error" | "warning" | "info"
   >();
   const BASE_API = process.env.NEXT_PUBLIC_BASE_API;
@@ -60,16 +60,25 @@ const CardForm = ({ data, page, refreshData }: Props) => {
     console.log(res);
     if (res.status !== 201) {
       console.log("update failed");
-			setToastType("error")
+      await toggleToastNotification("error");
       return;
     }
-		setToastType("success")
-		refreshData()
+    await toggleToastNotification("success");
+    refreshData();
+  }
+
+  async function toggleToastNotification(
+    type: "success" | "error" | "warning" | "info"
+  ) {
+    setToastType(type);
+    setTimeout(() => {
+      setToastType(undefined);
+    }, 3000);
   }
 
   return (
     <>
-		{toastType === "success" ? (
+      {toastType === "success" ? (
         <ToastNotification type="success" message="Successfully updated data" />
       ) : toastType === "warning" ? (
         <ToastNotification type="error" message="Could not updated data" />

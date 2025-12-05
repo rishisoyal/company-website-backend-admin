@@ -49,12 +49,21 @@ const TextForm = ({ data, page, refreshData }: Props) => {
     console.log(res);
     if (res.status !== 201) {
       console.log("update failed");
-      setToastType("error");
+      await toggleToastNotification("error");
       return;
     }
-    setToastType("success");
+    await toggleToastNotification("success");
     refreshData();
   };
+
+	 async function toggleToastNotification(
+    type: "success" | "error" | "warning" | "info"
+  ) {
+    setToastType(type);
+    setTimeout(() => {
+      setToastType(undefined);
+    }, 3000);
+  }
 
   return (
     <>
