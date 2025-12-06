@@ -36,14 +36,14 @@ export default function Popup({ isOpen, onClose, children }: Props) {
             >
               {children}
 
-              <div className="w-full flex place-content-center">
+              {/* <div className="w-full flex place-content-center">
                 <button
                   onClick={onClose}
                   className="mt-4 w-24 cursor-pointer py-2 rounded-lg bg-black text-white active:scale-95 hover:scale-105 duration-300"
                 >
                   Close
                 </button>
-              </div>
+              </div> */}
             </div>
           </motion.div>
         </>
