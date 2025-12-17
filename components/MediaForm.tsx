@@ -3,6 +3,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import type { MediaData } from "../types/content.types";
 import ToastNotification from "./ToastNotification";
+import { ThreeDots } from "react-loader-spinner";
 
 type Props = {
   data: MediaData;
@@ -14,22 +15,26 @@ type Props = {
 };
 
 export default function MediaForm({ data, page, refreshData }: Props) {
-  const [toastType, setToastType] = useState<
-    "success" | "error" | "warning" | "info" | null
-  >(null);
+  const [toastNotify, setToastNotify] = useState<{
+    type: "success" | "error" | "warning" | "info";
+    message: string;
+  } | null>(null);
   const BASE_API = process.env.NEXT_PUBLIC_BASE_API;
   const [mediaPath, setMediaPath] = useState(data.media_path);
   const [file, setFile] = useState<File | null>(null);
+  const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    setToastType((prev) => (prev !== null ? null : prev));
+    setToastNotify((prev) => (prev !== null ? null : prev));
     e.preventDefault();
     if (!file) {
       requestAnimationFrame(() => {
-        setToastType("warning"); // fire again on next frame
+        setToastNotify({ type: "warning", message: "No new file selected" }); // fire again on next frame
       });
       return;
     }
+
+    setLoading(true);
 
     const formData = new FormData();
     formData.set("media", file!);
@@ -43,32 +48,40 @@ export default function MediaForm({ data, page, refreshData }: Props) {
       },
     });
 
-    console.log(res);
+    // console.log(res);
     if (res.status !== 200) {
       console.log("update failed");
-      setToastType("error");
+      setToastNotify({ type: "error", message: "Could not update data" });
       return;
     }
-    setToastType("success");
-		setFile(null)
+    setToastNotify({ type: "success", message: "Successfully updated data" });
+    setFile(null);
     refreshData();
+    setLoading(false);
   }
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    if (e.target.files![0].type !== "video/webm") {
+      setToastNotify((prev) => (prev !== null ? null : prev));
+      requestAnimationFrame(() => {
+        setToastNotify({
+          type: "warning",
+          message: "Only .mp4 and .webm formats are supported",
+        });
+      });
+      return;
+    }
     setFile(e.currentTarget.files![0]);
     setMediaPath(URL.createObjectURL(e.currentTarget.files![0]));
   }
 
   return (
     <>
-      {toastType === "success" ? (
-        <ToastNotification type="success" message="Successfully updated data" />
-      ) : toastType === "error" ? (
-        <ToastNotification type="error" message="Could not updated data" />
-      ) : toastType === "warning" ? (
-        <ToastNotification type="warning" message="No new file uploaded" />
-      ) : (
-        ""
+      {toastNotify && (
+        <ToastNotification
+          type={toastNotify.type}
+          message={toastNotify.message}
+        />
       )}
       <form
         method="POST"
@@ -114,9 +127,10 @@ export default function MediaForm({ data, page, refreshData }: Props) {
         </div>
         <button
           type="submit"
-          className="mt-5 bg-indigo-600 text-white h-12 w-56 px-4 rounded active:scale-95 transition cursor-pointer hover:scale-105"
+          className={`mt-5 bg-indigo-600 text-white h-12 w-56 px-4 rounded active:scale-95 transition cursor-pointer disabled:pointer-events-none hover:scale-105 flex items-center justify-center`}
+          disabled={loading}
         >
-          Update
+          {loading ? <ThreeDots /> : "Update"}
         </button>
       </form>
     </>

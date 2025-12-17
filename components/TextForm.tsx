@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import type { TextData } from "../types/content.types";
 import ToastNotification from "./ToastNotification";
+import { ThreeDots } from "react-loader-spinner";
 
 type Props = {
   data: TextData;
@@ -13,15 +14,17 @@ type Props = {
 };
 
 const TextForm = ({ data, page, refreshData }: Props) => {
-  const [toastType, setToastType] = useState<
-    "success" | "error" | "warning" | "info" | null
-  >(null);
+  const [toastNotify, setToastNotify] = useState<{
+    type: "success" | "error" | "warning" | "info";
+    message: string;
+  } | null>(null);
   const BASE_API = process.env.NEXT_PUBLIC_BASE_API;
   const [formData, setFormData] = useState({
     title: data.title,
     subtitle: data.subtitle,
     text: data.text,
   });
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (
     e:
@@ -35,7 +38,8 @@ const TextForm = ({ data, page, refreshData }: Props) => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setToastType(null);
+    setToastNotify(null);
+    setLoading(true);
     const res = await fetch(
       `${BASE_API}/api/content?page=${page}&contentType=text&blockType=${data.block_type}`,
       {
@@ -46,24 +50,24 @@ const TextForm = ({ data, page, refreshData }: Props) => {
       }
     );
 
-    console.log(res);
+    // console.log(res);
     if (res.status !== 201) {
       console.log("update failed");
-      setToastType("error");
+      setToastNotify({ type: "error", message: "Could not update data" });
       return;
     }
-    setToastType("success");
+    setToastNotify({ type: "success", message: "Successfully updated data" });
     refreshData();
+    setLoading(false);
   };
 
   return (
     <>
-      {toastType === "success" ? (
-        <ToastNotification type="success" message="Successfully updated data" />
-      ) : toastType === "error" ? (
-        <ToastNotification type="error" message="Could not update data" />
-      ) : (
-        ""
+      {toastNotify && (
+        <ToastNotification
+          type={toastNotify.type}
+          message={toastNotify.message}
+        />
       )}
       <form
         method="POST"
@@ -120,9 +124,10 @@ const TextForm = ({ data, page, refreshData }: Props) => {
         </div>
         <button
           type="submit"
-          className="mt-5 bg-indigo-600 text-white h-12 w-56 px-4 rounded active:scale-95 transition cursor-pointer hover:scale-105"
+          className={`mt-5 bg-indigo-600 text-white h-12 w-56 px-4 rounded active:scale-95 transition cursor-pointer disabled:pointer-events-none hover:scale-105 flex items-center justify-center`}
+          disabled={loading}
         >
-          Update
+          {loading ? <ThreeDots /> : "Update"}
         </button>
       </form>
     </>

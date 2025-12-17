@@ -1,10 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
-import { PersonStandingIcon, LockIcon } from "lucide-react";
 import axios from "axios";
 import { redirect } from "next/navigation";
 import ToastNotification from "@/components/ToastNotification";
 import { useRouter } from "next/navigation";
+import { IoLockClosed, IoPersonCircle } from "react-icons/io5";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -13,7 +13,7 @@ const Login = () => {
   });
   const [invalid, setInvalid] = useState(false);
   const [loading, setLoading] = useState(false);
-  const router = useRouter()
+  const router = useRouter();
 
   useEffect(() => {
     async function checkIfUserAlreadyLogedIn() {
@@ -32,8 +32,8 @@ const Login = () => {
         return;
       }
       // console.log(res.status);
-      router.push("/admin")
-      return 
+      router.push("/admin");
+      return;
     }
     checkIfUserAlreadyLogedIn();
   }, []);
@@ -89,7 +89,7 @@ const Login = () => {
         >
           <h1 className="text-gray-900 text-3xl mt-10 font-medium">Login</h1>
           <div className="flex items-center mt-6 w-full text-black bg-white border border-gray-300/80 h-12 rounded-full overflow-hidden pl-6 gap-2">
-            <PersonStandingIcon />
+            <IoPersonCircle size={20} />
             <input
               type="text"
               name="name"
@@ -103,7 +103,7 @@ const Login = () => {
           </div>
 
           <div className="flex items-center mt-4 w-full text-black bg-white border border-gray-300/80 h-12 rounded-full overflow-hidden pl-6 gap-2">
-            <LockIcon />
+            <IoLockClosed size={20}/>{" "}
             <input
               type="password"
               name="password"
@@ -115,14 +115,12 @@ const Login = () => {
               disabled={loading}
             />
           </div>
-          {/* <div className="mt-4 text-left text-indigo-500">
-        <button className="text-sm" type="reset">
-				Forget password?
-        </button>
-				</div> */}
           <button
             type="submit"
-            className="mt-4 w-full h-11 rounded-full text-white bg-indigo-500 hover:opacity-90 transition-opacity cursor-pointer"
+            className={`mt-4 w-full h-11 rounded-full text-white bg-indigo-500 hover:opacity-90 transition-opacity cursor-pointer ${
+              loading ? "opacity-50" : ""
+            }`}
+            disabled={loading}
           >
             Log in
           </button>

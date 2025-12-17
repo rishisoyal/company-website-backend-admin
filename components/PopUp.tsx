@@ -1,5 +1,6 @@
 "use client";
 import { AnimatePresence, motion } from "framer-motion";
+import { IoCloseCircleOutline } from "react-icons/io5";
 
 type Props = {
   isOpen: boolean;
@@ -23,27 +24,28 @@ export default function Popup({ isOpen, onClose, children }: Props) {
 
           {/* Popup Wrapper */}
           <motion.div
-            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            className="fixed inset-0 z-50 flex flex-col items-center justify-center p-4"
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
             onClick={onClose}
           >
             {/* Content Box */}
-            <div
-              className="bg-white rounded-2xl p-12 shadow-xl max-w-max w-full max-h-[80vh] overflow-y-auto ml-34"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {children}
-
-              {/* <div className="w-full flex place-content-center">
-                <button
-                  onClick={onClose}
-                  className="mt-4 w-24 cursor-pointer py-2 rounded-lg bg-black text-white active:scale-95 hover:scale-105 duration-300"
-                >
-                  Close
-                </button>
-              </div> */}
+            <div className="w-max relative">
+              <div
+                className="bg-white rounded-2xl p-12 shadow-xl max-w-max w-full max-h-[80vh] overflow-y-auto ml-34"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="w-full flex items-center justify-end left-0 absolute top-0 p-2">
+                  <button
+                    onClick={onClose}
+                    className="cursor-pointer p-2 rounded-full text-black opacity-70 hover:opacity-100 duration-300"
+                  >
+                    <IoCloseCircleOutline size={40} />
+                  </button>
+                </div>
+                {children}
+              </div>
             </div>
           </motion.div>
         </>
