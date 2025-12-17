@@ -4,15 +4,16 @@ import { PersonStandingIcon, LockIcon } from "lucide-react";
 import axios from "axios";
 import { redirect } from "next/navigation";
 import ToastNotification from "@/components/ToastNotification";
+import { useRouter } from "next/navigation";
 
 const Login = () => {
-  const BASE_API = process.env.NEXT_PUBLIC_BASE_API;
   const [formData, setFormData] = useState({
     name: "",
     password: "",
   });
   const [invalid, setInvalid] = useState(false);
   const [loading, setLoading] = useState(false);
+  const router = useRouter()
 
   useEffect(() => {
     async function checkIfUserAlreadyLogedIn() {
@@ -31,7 +32,8 @@ const Login = () => {
         return;
       }
       // console.log(res.status);
-      return redirect("/admin");
+      router.push("/admin")
+      return 
     }
     checkIfUserAlreadyLogedIn();
   }, []);
