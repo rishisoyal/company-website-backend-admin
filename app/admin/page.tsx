@@ -1,9 +1,7 @@
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-import AnalyticsCard from "@/components/AnalyticsCard";
-import BChart from "@/components/AnalyticsChart";
-import AnalyticsTable from "@/components/AnalyticsTable";
+import { AnalyticsCard, AnalyticsTable, AnalyticsBChart } from "@/components/Analytics";
 import { GeneralStats, Metrics, RealTimeData } from "@/types/analytics.types";
 
 export default async function Analytics() {
@@ -108,9 +106,6 @@ export default async function Analytics() {
     return Math.floor(ms / 1000).toString();
   }
 
-  // ----------------------------------------------------
-  // SECURE RENDER — Now your UI can NEVER crash on Vercel
-  // ----------------------------------------------------
   return (
     <main className="ml-12 lg:ml-64 flex flex-col items-center overflow-scroll min-h-screen justify-between animate__animated animate__fadeIn">
       <div className="w-full flex flex-col items-center justify-evenly h-screen">
@@ -179,21 +174,21 @@ export default async function Analytics() {
       </div>
 
       <div className="p-4 w-full flex items-center justify-end">
-        <BChart
+        <AnalyticsBChart
           xAxis={[{ label: "OS", data: OSMetrics.map((val) => val.x) }]}
           yAxis={[{ data: OSMetrics.map((val) => val.y) }]}
         />
       </div>
 
       <div className="p-4 w-full flex items-center justify-end">
-        <BChart
+        <AnalyticsBChart
           xAxis={[{ label: "Device", data: deviceMetrics.map((val) => val.x) }]}
           yAxis={[{ data: deviceMetrics.map((val) => val.y) }]}
         />
       </div>
 
       <div className="p-4 w-full flex items-center justify-end">
-        <BChart
+        <AnalyticsBChart
           xAxis={[
             { label: "Browser", data: browserMetrics.map((val) => val.x) },
           ]}

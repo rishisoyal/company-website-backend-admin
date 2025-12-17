@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { redirect } from "next/navigation";
 import ToastNotification from "@/components/ToastNotification";
 import { useRouter } from "next/navigation";
 import { IoLockClosed, IoPersonCircle } from "react-icons/io5";
@@ -71,7 +70,7 @@ const Login = () => {
     }
     // console.log(res.status);
     setInvalid(false);
-    return redirect("/admin");
+    return router.push("/admin");
   }
 
   return (
