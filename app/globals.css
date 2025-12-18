@@ -3,7 +3,7 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-	--animate-duration: 100ms;
+  --animate-duration: 100ms;
   --animate-delay: 0s;
 }
 
@@ -44,11 +44,13 @@ body {
     transform: rotate(1turn);
   }
 }
+
 .loading-box {
   position: relative;
   z-index: 0;
   overflow: hidden;
 }
+
 .loading-box::before {
   content: "";
   position: absolute;
@@ -63,8 +65,9 @@ body {
   background-position: 0 0, 100% 0, 100% 100%, 0 100%;
   background-image: linear-gradient(#399953, #399953), linear-gradient(#fbb300, #fbb300), linear-gradient(#d53e33, #d53e33), linear-gradient(#377af5, #377af5);
   -webkit-animation: rotate 4s linear infinite;
-          animation: rotate 4s linear infinite;
+  animation: rotate 4s linear infinite;
 }
+
 .loading-box::after {
   content: "";
   position: absolute;
@@ -77,15 +80,44 @@ body {
   border-radius: 5px;
 }
 
-.animate_width_down{
-	animation: animate_width_down .2s linear 0s 1;
+.animate_width_down {
+  animation: animate_width_down .2s linear 0s 1;
 }
 
+
+/* ================================
+   NPROGRESS OVERRIDES (GLOBAL)
+================================ */
+#nprogress {
+  pointer-events: none;
+}
+
+#nprogress .bar {
+  background: #2b7fff !important;
+  height: 4px !important;
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 9999 !important;
+}
+
+#nprogress .peg {
+  box-shadow: 0 0 10px #2b7fff, 0 0 5px #2b7fff;
+}
+
+#nprogress .spinner {
+  display: none !important;
+}
+
+
+
 @keyframes animate_width_down {
-	0%{
-		height: 0;
-	}
-	100%{
-		height: 100;
-	}
+  0% {
+    height: 0;
+  }
+
+  100% {
+    height: 100;
+  }
 }
