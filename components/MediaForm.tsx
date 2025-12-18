@@ -1,9 +1,10 @@
 "use client";
+import { useUIStore } from "@/store/UIStore";
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { ThreeDots } from "react-loader-spinner";
 import type { MediaData } from "../types/content.types";
 import ToastNotification from "./ToastNotification";
-import { ThreeDots } from "react-loader-spinner";
 
 type Props = {
   data: MediaData;
@@ -23,6 +24,7 @@ export default function MediaForm({ data, page, refreshData }: Props) {
   const [mediaPath, setMediaPath] = useState(data.media_path);
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
+  const popupOpen = useUIStore((s) => s.popupOpen);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     setToastNotify((prev) => (prev !== null ? null : prev));
@@ -56,9 +58,13 @@ export default function MediaForm({ data, page, refreshData }: Props) {
     }
     setToastNotify({ type: "success", message: "Successfully updated data" });
     setFile(null);
-    refreshData();
     setLoading(false);
   }
+  useEffect(() => {
+    if (!popupOpen) {
+      refreshData();
+    }
+  }, [popupOpen]);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.files![0].type !== "video/webm") {

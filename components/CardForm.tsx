@@ -1,9 +1,10 @@
 "use client";
+import { useUIStore } from "@/store/UIStore";
 import { CardData } from "@/types/content.types";
 import axios from "axios";
-import React, { useState } from "react";
-import ToastNotification from "./ToastNotification";
+import React, { useEffect, useState } from "react";
 import { ThreeDots } from "react-loader-spinner";
+import ToastNotification from "./ToastNotification";
 
 type Props = {
   data: CardData;
@@ -22,6 +23,7 @@ const CardForm = ({ data, page, refreshData }: Props) => {
   const BASE_API = process.env.NEXT_PUBLIC_BASE_API;
   const [cardData, setCardData] = useState(data.cards);
   const [loading, setLoading] = useState(false);
+  const popupOpen = useUIStore((s) => s.popupOpen);
 
   function handleChange(
     e: React.ChangeEvent<HTMLInputElement>,
@@ -69,9 +71,13 @@ const CardForm = ({ data, page, refreshData }: Props) => {
       return;
     }
     setToastNotify({ type: "success", message: "Successfully updated data" });
-    refreshData();
     setLoading(false);
   }
+  useEffect(() => {
+    if (!popupOpen) {
+      refreshData();
+    }
+  }, [popupOpen]);
 
   return (
     <>

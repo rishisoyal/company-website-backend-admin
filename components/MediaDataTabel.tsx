@@ -1,9 +1,9 @@
 "use client";
+import { useUIStore } from "@/store/UIStore";
 import type { MediaData } from "@/types/content.types";
 import { MRT_ColumnDef } from "material-react-table";
 import { useEffect, useState } from "react";
 import { FaRegEdit } from "react-icons/fa";
-import { ThreeDots } from "react-loader-spinner";
 import DataTable from "./DataTable";
 import MediaForm from "./MediaForm";
 import Popup from "./PopUp";
@@ -18,18 +18,21 @@ type Props = {
 };
 
 const MediaDataTable = ({ data, page, refreshData }: Props) => {
-  const [updateIndex, setUpdateIndex] = useState(0);
-  const [updateMode, setUpdateMode] = useState(false);
   const [selectedRow, setSelectedRow] = useState<MediaData | null>(null);
+  const popupOpen = useUIStore((s) => s.popupOpen);
+  const setPopupOpen = useUIStore((s) => s.setPopupOpen);
 
   useEffect(() => {
-    setUpdateMode(false);
-    setSelectedRow(null);
+    if (popupOpen) {
+      setPopupOpen(false);
+      setSelectedRow(null);
+    }
   }, [page]);
 
   const handleUpdate = (row: MediaData) => {
+    console.log("OPEN POPUP");
+    setPopupOpen(true);
     setSelectedRow(row);
-    setUpdateMode(true);
   };
   const columns: MRT_ColumnDef<MediaData>[] = [
     { accessorKey: "block_type", header: "Block Type" },
@@ -70,11 +73,11 @@ const MediaDataTable = ({ data, page, refreshData }: Props) => {
   return (
     <>
       <DataTable columns={columns} data={data ?? []} />
-      {updateMode && selectedRow && (
-        <Popup isOpen={updateMode} onClose={() => setUpdateMode(false)}>
+      <Popup>
+        {selectedRow && (
           <MediaForm data={selectedRow} page={page} refreshData={refreshData} />
-        </Popup>
-      )}
+        )}
+      </Popup>
     </>
   );
 };

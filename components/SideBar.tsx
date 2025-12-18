@@ -143,7 +143,7 @@ export default function Sidebar() {
   }
 
   return (
-    <aside className="left-0 w-fit lg:w-64 bg-[#181825] text-gray-200 h-screen fixed p-4 overflow-y-auto border-r border-gray-700 z-99">
+    <aside className="left-0 w-fit lg:w-64 bg-[#181825] text-gray-200 h-screen fixed p-4 overflow-y-auto border-r border-gray-700 z-20">
       <button
         onClick={handleLogOutClick}
         className="text-red-700 bg-red-200 backdrop-blur-2xl rounded-sm p-2 mb-6 border-black cursor-pointer border-2 hover:border-red-700 w-full hidden lg:block"

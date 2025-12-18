@@ -6,6 +6,7 @@ import { FaRegEdit } from "react-icons/fa";
 import DataTable from "./DataTable";
 import Popup from "./PopUp";
 import TextForm from "./TextForm";
+import { useUIStore } from "@/store/UIStore";
 
 type Props = {
   data: TextData[];
@@ -17,18 +18,21 @@ type Props = {
 };
 
 const TextDataTable = ({ data, page, refreshData }: Props) => {
-  const [updateIndex, setUpdateIndex] = useState(0);
-  const [updateMode, setUpdateMode] = useState(false);
   const [selectedRow, setSelectedRow] = useState<TextData | null>(null);
+  const popupOpen = useUIStore((s) => s.popupOpen);
+  const setPopupOpen = useUIStore((s) => s.setPopupOpen);
 
   useEffect(() => {
-    setUpdateMode(false);
-    setSelectedRow(null);
+    if (popupOpen) {
+      setPopupOpen(false);
+      setSelectedRow(null);
+    }
   }, [page]);
 
   const handleUpdate = (row: TextData) => {
+    console.log("OPEN POPUP");
+    setPopupOpen(true);
     setSelectedRow(row);
-    setUpdateMode(true);
   };
 
   const columns: MRT_ColumnDef<TextData>[] = [
@@ -54,11 +58,11 @@ const TextDataTable = ({ data, page, refreshData }: Props) => {
   return (
     <>
       <DataTable columns={columns} data={data ?? []} />
-      {updateMode && selectedRow && (
-        <Popup isOpen={updateMode} onClose={() => setUpdateMode(false)}>
+      <Popup>
+        {selectedRow && (
           <TextForm data={selectedRow} page={page} refreshData={refreshData} />
-        </Popup>
-      )}
+        )}
+      </Popup>
     </>
   );
 };

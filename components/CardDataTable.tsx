@@ -1,4 +1,5 @@
 "use client";
+import { useUIStore } from "@/store/UIStore";
 import { CardData } from "@/types/content.types";
 import { Disclosure } from "@headlessui/react";
 import { MRT_ColumnDef } from "material-react-table";
@@ -18,18 +19,21 @@ type Props = {
 };
 
 const CardDataTable = ({ data, page, refreshData }: Props) => {
-  const [updateIndex, setUpdateIndex] = useState(0);
-  const [updateMode, setUpdateMode] = useState(false);
   const [selectedRow, setSelectedRow] = useState<CardData | null>(null);
+  const popupOpen = useUIStore((s) => s.popupOpen);
+  const setPopupOpen = useUIStore((s) => s.setPopupOpen);
 
   useEffect(() => {
-    setUpdateMode(false);
-    setSelectedRow(null);
+    if (popupOpen) {
+      setPopupOpen(false);
+      setSelectedRow(null);
+    }
   }, [page]);
 
   const handleUpdate = (row: CardData) => {
+    console.log("OPEN POPUP");
+    setPopupOpen(true);
     setSelectedRow(row);
-    setUpdateMode(true);
   };
   const columns: MRT_ColumnDef<CardData>[] = [
     { accessorKey: "block_type", header: "Block Type" },
@@ -99,11 +103,11 @@ const CardDataTable = ({ data, page, refreshData }: Props) => {
   return (
     <>
       <DataTable columns={columns} data={data ?? []} />
-      {updateMode && selectedRow && (
-        <Popup isOpen={updateMode} onClose={() => setUpdateMode(false)}>
+      <Popup>
+        {selectedRow && (
           <CardForm data={selectedRow} page={page} refreshData={refreshData} />
-        </Popup>
-      )}
+        )}
+      </Popup>
     </>
   );
 };

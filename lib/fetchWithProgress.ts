@@ -1,13 +1,18 @@
 import { startRequest, endRequest } from "./progress";
+import { useUIStore } from "@/store/UIStore";
 
 export async function fetchWithProgress(
   input: RequestInfo,
   init?: RequestInit
 ) {
-  await startRequest();
+  const {popupOpen} = useUIStore.getState();
+  // const popupOpen = useUIStore((s) => s.popupOpen);
+
+  if (!popupOpen) await startRequest();
+
   try {
     return await fetch(input, init);
   } finally {
-    await endRequest();
+    if (!popupOpen) await endRequest();
   }
 }

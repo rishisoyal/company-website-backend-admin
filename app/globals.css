@@ -90,6 +90,7 @@ body {
 ================================ */
 #nprogress {
   pointer-events: none;
+  height:min-content;
 }
 
 #nprogress .bar {
@@ -99,7 +100,7 @@ body {
   top: 0;
   left: 0;
   width: 100%;
-  z-index: 9999 !important;
+  z-index: 80 !important;
 }
 
 #nprogress .peg {

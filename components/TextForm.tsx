@@ -1,8 +1,9 @@
 "use client";
-import React, { useState } from "react";
+import { useUIStore } from "@/store/UIStore";
+import React, { useEffect, useState } from "react";
+import { ThreeDots } from "react-loader-spinner";
 import type { TextData } from "../types/content.types";
 import ToastNotification from "./ToastNotification";
-import { ThreeDots } from "react-loader-spinner";
 
 type Props = {
   data: TextData;
@@ -25,6 +26,7 @@ const TextForm = ({ data, page, refreshData }: Props) => {
     text: data.text,
   });
   const [loading, setLoading] = useState(false);
+  const popupOpen = useUIStore((s) => s.popupOpen);
 
   const handleChange = (
     e:
@@ -57,9 +59,14 @@ const TextForm = ({ data, page, refreshData }: Props) => {
       return;
     }
     setToastNotify({ type: "success", message: "Successfully updated data" });
-    refreshData();
     setLoading(false);
   };
+
+  useEffect(() => {
+    if (!popupOpen) {
+      refreshData();
+    }
+  }, [popupOpen]);
 
   return (
     <>
