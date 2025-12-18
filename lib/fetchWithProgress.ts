@@ -5,8 +5,7 @@ export async function fetchWithProgress(
   input: RequestInfo,
   init?: RequestInit
 ) {
-  const {popupOpen} = useUIStore.getState();
-  // const popupOpen = useUIStore((s) => s.popupOpen);
+  const { popupOpen } = useUIStore.getState();
 
   if (!popupOpen) await startRequest();
 

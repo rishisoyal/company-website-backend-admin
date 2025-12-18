@@ -90,7 +90,7 @@ body {
 ================================ */
 #nprogress {
   pointer-events: none;
-  height:min-content;
+  height: min-content;
 }
 
 #nprogress .bar {
@@ -109,6 +109,26 @@ body {
 
 #nprogress .spinner {
   display: none !important;
+}
+
+/* Loading blinking layer */
+.loading-layer {
+  animation: blink 1.6s ease-in-out infinite;
+  will-change: opacity;
+}
+
+@keyframes blink {
+  0% {
+    opacity: 0.4;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0.4;
+  }
 }
 
 

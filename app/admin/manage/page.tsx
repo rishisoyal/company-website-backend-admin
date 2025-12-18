@@ -97,8 +97,7 @@ export default function Manage() {
     <>
       <main className="ml-12 lg:ml-64 flex flex-col items-center overflow-scroll relative justify-center">
         {loading && (
-          <div className="absolute w-full h-full inset-0 bg-white/60 flex items-center justify-center z-10">
-            {/* <TailSpin /> */}
+          <div className="loading-layer absolute w-full h-full inset-0 bg-white/60 flex items-center justify-center z-10">
           </div>
         )}
 
