@@ -9,25 +9,28 @@ import TextForm from "./TextForm";
 
 type Props = {
   data: TextData[];
-  page: string
+  page: string;
   /**
    * Callback function to fetch updated data
-   */;
+   */
   refreshData: () => void;
 };
 
 const TextDataTable = ({ data, page, refreshData }: Props) => {
   const [updateIndex, setUpdateIndex] = useState(0);
   const [updateMode, setUpdateMode] = useState(false);
+  const [selectedRow, setSelectedRow] = useState<TextData | null>(null);
 
   useEffect(() => {
     setUpdateMode(false);
+    setSelectedRow(null);
   }, [page]);
 
-  const handleUpdate = async (row_index: number) => {
-    setUpdateIndex(row_index);
+  const handleUpdate = (row: TextData) => {
+    setSelectedRow(row);
     setUpdateMode(true);
   };
+
   const columns: MRT_ColumnDef<TextData>[] = [
     { accessorKey: "block_type", header: "Block Type" },
     { accessorKey: "title", header: "Title" },
@@ -38,8 +41,8 @@ const TextDataTable = ({ data, page, refreshData }: Props) => {
       Cell: ({ row }) => (
         <div className="flex gap-2">
           <button
-            onClick={() => handleUpdate(row.index)}
-            className="p-2 bg-blue-500 text-white rounded-md text-[24px] cursor-pointer"
+            onClick={() => handleUpdate(row.original)}
+            className="p-2 bg-blue-500 text-white rounded-md text-[24px]"
           >
             <FaRegEdit />
           </button>
@@ -50,16 +53,12 @@ const TextDataTable = ({ data, page, refreshData }: Props) => {
 
   return (
     <>
-      <DataTable columns={columns} data={data} />
-      {
+      <DataTable columns={columns} data={data ?? []} />
+      {updateMode && selectedRow && (
         <Popup isOpen={updateMode} onClose={() => setUpdateMode(false)}>
-          <TextForm
-            data={data[updateIndex]}
-            page={page}
-            refreshData={refreshData}
-          />
+          <TextForm data={selectedRow} page={page} refreshData={refreshData} />
         </Popup>
-      }
+      )}
     </>
   );
 };

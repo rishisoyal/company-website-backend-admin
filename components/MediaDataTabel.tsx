@@ -20,15 +20,17 @@ type Props = {
 const MediaDataTable = ({ data, page, refreshData }: Props) => {
   const [updateIndex, setUpdateIndex] = useState(0);
   const [updateMode, setUpdateMode] = useState(false);
+  const [selectedRow, setSelectedRow] = useState<MediaData | null>(null);
 
   useEffect(() => {
     setUpdateMode(false);
+    setSelectedRow(null);
   }, [page]);
 
-  async function handleUpdate(row_index: number) {
-    setUpdateIndex(row_index);
+  const handleUpdate = (row: MediaData) => {
+    setSelectedRow(row);
     setUpdateMode(true);
-  }
+  };
   const columns: MRT_ColumnDef<MediaData>[] = [
     { accessorKey: "block_type", header: "Block Type" },
     {
@@ -56,8 +58,8 @@ const MediaDataTable = ({ data, page, refreshData }: Props) => {
       Cell: ({ row }) => (
         <div className="flex gap-2">
           <button
-            onClick={() => handleUpdate(row.index)}
-            className="p-2 bg-blue-500 text-white rounded-md text-[24px] cursor-pointer"
+            onClick={() => handleUpdate(row.original)}
+            className="p-2 bg-blue-500 text-white rounded-md text-[24px]"
           >
             <FaRegEdit />
           </button>
@@ -67,16 +69,12 @@ const MediaDataTable = ({ data, page, refreshData }: Props) => {
   ];
   return (
     <>
-      <DataTable columns={columns} data={data} />
-      {
+      <DataTable columns={columns} data={data ?? []} />
+      {updateMode && selectedRow && (
         <Popup isOpen={updateMode} onClose={() => setUpdateMode(false)}>
-          <MediaForm
-            data={data[updateIndex]}
-            page={page}
-            refreshData={refreshData}
-          />
+          <MediaForm data={selectedRow} page={page} refreshData={refreshData} />
         </Popup>
-      }
+      )}
     </>
   );
 };

@@ -5,7 +5,7 @@ import TextDataTable from "@/components/TextDataTable";
 import { fetchWithProgress } from "@/lib/fetchWithProgress";
 import { CardData, MediaData, TextData } from "@/types/content.types";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { TailSpin } from "react-loader-spinner";
 
 export default function Manage() {
@@ -16,7 +16,7 @@ export default function Manage() {
   const [data, setData] = useState<
     TextData[] | MediaData[] | CardData[] | null
   >(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   if (!page || !contentType) {
     return (
@@ -50,22 +50,23 @@ export default function Manage() {
     );
   }
 
-  async function fetchData() {
+  const fetchData = useCallback(async () => {
+    setLoading(true);
+
     const res = await fetchWithProgress(
       `${BASE_API}/api/content?page=${page}&contentType=${contentType}`,
-      {
-        credentials: "include",
-      }
+      { credentials: "include" }
     );
+
     setData((await res.json()).data.content);
-  }
+    setLoading(false);
+  }, [BASE_API, page, contentType]);
+
   useEffect(() => {
-    setLoading(true);
     async function loadData() {
       await fetchData();
     }
     loadData();
-    setLoading(false);
   }, [page, contentType]);
 
   const contentDataTables: Record<string, React.ReactNode> = {
@@ -94,18 +95,17 @@ export default function Manage() {
 
   return (
     <>
-      {loading ? (
-        <div className="flex text-black text-4xl items-center justify-center h-screen w-full ml-30">
-          {/* Loading... */}
-          <TailSpin />
-        </div>
-      ) : (
-        <main className="ml-12 lg:ml-64 flex flex-col items-center overflow-scroll">
-          <div className="container w-full max-w-[80vw] animate__animated animate__fadeIn">
-            {contentDataTables[contentType]}
+      <main className="ml-12 lg:ml-64 flex flex-col items-center overflow-scroll relative justify-center">
+        {loading && (
+          <div className="absolute inset-0 bg-white/60 flex items-center justify-center z-10">
+            <TailSpin />
           </div>
-        </main>
-      )}
+        )}
+
+        <div className="container w-full max-w-[80vw] animate__animated animate__fadeIn">
+          {contentDataTables[contentType]}
+        </div>
+      </main>
     </>
   );
 }
