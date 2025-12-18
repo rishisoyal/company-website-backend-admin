@@ -1,4 +1,5 @@
 "use client";
+import { useUIStore } from "@/store/UIStore";
 import { TextData } from "@/types/content.types";
 import { MRT_ColumnDef } from "material-react-table";
 import { useEffect, useState } from "react";
@@ -6,7 +7,6 @@ import { FaRegEdit } from "react-icons/fa";
 import DataTable from "./DataTable";
 import Popup from "./PopUp";
 import TextForm from "./TextForm";
-import { useUIStore } from "@/store/UIStore";
 
 type Props = {
   data: TextData[];
@@ -20,18 +20,18 @@ type Props = {
 const TextDataTable = ({ data, page, refreshData }: Props) => {
   const [selectedRow, setSelectedRow] = useState<TextData | null>(null);
   const popupOpen = useUIStore((s) => s.popupOpen);
-  const setPopupOpen = useUIStore((s) => s.setPopupOpen);
+  const openPopup = useUIStore((s) => s.openPopup);
 
   useEffect(() => {
     if (popupOpen) {
-      setPopupOpen(false);
+      openPopup();
       setSelectedRow(null);
     }
   }, [page]);
 
   const handleUpdate = (row: TextData) => {
     console.log("OPEN POPUP");
-    setPopupOpen(true);
+    openPopup();
     setSelectedRow(row);
   };
 
@@ -46,7 +46,7 @@ const TextDataTable = ({ data, page, refreshData }: Props) => {
         <div className="flex gap-2">
           <button
             onClick={() => handleUpdate(row.original)}
-            className="p-2 bg-blue-500 text-white rounded-md text-[24px]"
+            className="p-2 bg-blue-500 text-white cursor-pointer rounded-md text-[24px]"
           >
             <FaRegEdit />
           </button>

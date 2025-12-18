@@ -24,6 +24,9 @@ const CardForm = ({ data, page, refreshData }: Props) => {
   const [cardData, setCardData] = useState(data.cards);
   const [loading, setLoading] = useState(false);
   const popupOpen = useUIStore((s) => s.popupOpen);
+  const [dataUpdated, setDataUpdated] = useState(false);
+  const lockPopup = useUIStore((s) => s.lockPopup);
+  const unlockPopup = useUIStore((s) => s.unlockPopup);
 
   function handleChange(
     e: React.ChangeEvent<HTMLInputElement>,
@@ -64,7 +67,6 @@ const CardForm = ({ data, page, refreshData }: Props) => {
       }
     );
 
-    console.log(res);
     if (res.status !== 201) {
       console.log("update failed");
       setToastNotify({ type: "error", message: "Could not update data" });
@@ -72,12 +74,17 @@ const CardForm = ({ data, page, refreshData }: Props) => {
     }
     setToastNotify({ type: "success", message: "Successfully updated data" });
     setLoading(false);
+    setDataUpdated(true);
   }
   useEffect(() => {
-    if (!popupOpen) {
+    if (!popupOpen && dataUpdated) {
       refreshData();
     }
-  }, [popupOpen]);
+  }, [popupOpen, dataUpdated]);
+
+  useEffect(() => {
+    loading ? lockPopup() : unlockPopup();
+  }, [loading]);
 
   return (
     <>

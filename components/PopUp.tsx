@@ -9,8 +9,7 @@ type Props = {
 
 export default function Popup({ children }: Props) {
   const popupOpen = useUIStore((s) => s.popupOpen);
-  const setPopupOpen = useUIStore((s) => s.setPopupOpen);
-  console.log({ popupOpen });
+  const closePopup = useUIStore((s) => s.closePopup);
 
   return (
     <AnimatePresence>
@@ -19,7 +18,7 @@ export default function Popup({ children }: Props) {
           {/* Background Overlay */}
           <motion.div
             className="fixed inset-0 bg-black/40 backdrop-blur-md z-999"
-            onClick={() => setPopupOpen(false)}
+            onClick={() => closePopup()}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -31,7 +30,7 @@ export default function Popup({ children }: Props) {
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
-            onClick={() => setPopupOpen(false)}
+            onClick={() => closePopup()}
           >
             {/* Content Box */}
             <div className="w-max relative">
@@ -41,7 +40,7 @@ export default function Popup({ children }: Props) {
               >
                 <div className="w-full flex items-center justify-end left-0 absolute top-0 p-2">
                   <button
-                    onClick={() => setPopupOpen(false)}
+                    onClick={() => closePopup()}
                     className="cursor-pointer p-2 rounded-full text-black opacity-70 hover:opacity-100 duration-300"
                   >
                     <IoCloseCircleOutline size={40} />

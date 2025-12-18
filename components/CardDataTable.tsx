@@ -21,18 +21,18 @@ type Props = {
 const CardDataTable = ({ data, page, refreshData }: Props) => {
   const [selectedRow, setSelectedRow] = useState<CardData | null>(null);
   const popupOpen = useUIStore((s) => s.popupOpen);
-  const setPopupOpen = useUIStore((s) => s.setPopupOpen);
+  const openPopup = useUIStore((s) => s.openPopup);
 
   useEffect(() => {
     if (popupOpen) {
-      setPopupOpen(false);
+      openPopup();
       setSelectedRow(null);
     }
   }, [page]);
 
   const handleUpdate = (row: CardData) => {
     console.log("OPEN POPUP");
-    setPopupOpen(true);
+    openPopup();
     setSelectedRow(row);
   };
   const columns: MRT_ColumnDef<CardData>[] = [
@@ -92,7 +92,7 @@ const CardDataTable = ({ data, page, refreshData }: Props) => {
         <div className="flex gap-2">
           <button
             onClick={() => handleUpdate(row.original)}
-            className="p-2 bg-blue-500 text-white rounded-md text-[24px]"
+            className="p-2 bg-blue-500 text-white cursor-pointer rounded-md text-[24px]"
           >
             <FaRegEdit />
           </button>

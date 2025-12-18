@@ -25,6 +25,9 @@ export default function MediaForm({ data, page, refreshData }: Props) {
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const popupOpen = useUIStore((s) => s.popupOpen);
+  const [dataUpdated, setDataUpdated] = useState(false);
+  const lockPopup = useUIStore((s) => s.lockPopup);
+  const unlockPopup = useUIStore((s) => s.unlockPopup);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     setToastNotify((prev) => (prev !== null ? null : prev));
@@ -59,12 +62,17 @@ export default function MediaForm({ data, page, refreshData }: Props) {
     setToastNotify({ type: "success", message: "Successfully updated data" });
     setFile(null);
     setLoading(false);
+    setDataUpdated(true);
   }
   useEffect(() => {
-    if (!popupOpen) {
+    if (!popupOpen && dataUpdated) {
       refreshData();
     }
-  }, [popupOpen]);
+  }, [popupOpen, dataUpdated]);
+
+  useEffect(() => {
+    loading ? lockPopup() : unlockPopup();
+  }, [loading]);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.files![0].type !== "video/webm") {
@@ -92,7 +100,7 @@ export default function MediaForm({ data, page, refreshData }: Props) {
       <form
         method="POST"
         onSubmit={handleSubmit}
-        className="flex flex-col items-center text-sm mt-5"
+        className="container flex flex-col items-center text-sm mt-5"
       >
         <h1 className="text-4xl font-semibold text-slate-700 pb-4">
           Update {data.block_type} section

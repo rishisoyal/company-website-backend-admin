@@ -26,7 +26,10 @@ const TextForm = ({ data, page, refreshData }: Props) => {
     text: data.text,
   });
   const [loading, setLoading] = useState(false);
+  const [dataUpdated, setDataUpdated] = useState(false);
   const popupOpen = useUIStore((s) => s.popupOpen);
+  const lockPopup = useUIStore((s) => s.lockPopup);
+  const unlockPopup = useUIStore((s) => s.unlockPopup);
 
   const handleChange = (
     e:
@@ -52,7 +55,6 @@ const TextForm = ({ data, page, refreshData }: Props) => {
       }
     );
 
-    // console.log(res);
     if (res.status !== 201) {
       console.log("update failed");
       setToastNotify({ type: "error", message: "Could not update data" });
@@ -60,13 +62,18 @@ const TextForm = ({ data, page, refreshData }: Props) => {
     }
     setToastNotify({ type: "success", message: "Successfully updated data" });
     setLoading(false);
+    setDataUpdated(true);
   };
 
   useEffect(() => {
-    if (!popupOpen) {
+    if (!popupOpen && dataUpdated) {
       refreshData();
     }
-  }, [popupOpen]);
+  }, [popupOpen, dataUpdated]);
+
+  useEffect(() => {
+    loading ? lockPopup() : unlockPopup();
+  }, [loading]);
 
   return (
     <>

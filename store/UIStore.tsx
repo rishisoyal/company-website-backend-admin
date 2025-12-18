@@ -1,11 +1,43 @@
-import { create } from 'zustand'
+import { create } from "zustand";
 
-type UIState = {
-  popupOpen: boolean
-  setPopupOpen: (open: boolean) => void
-}
+type UIStore = {
+  popupOpen: boolean;
+  popupLocked: boolean;
 
-export const useUIStore = create<UIState>((set) => ({
+  /**
+   * sets popupOnep to true
+   */
+  openPopup: () => void;
+  /**
+   * sets popupOpen to false
+   */
+  closePopup: () => void;
+
+  /**
+   * sets popupLocked to true
+   */
+  lockPopup: () => void;
+  /**
+   * sets popupLocked to false
+   */
+  unlockPopup: () => void;
+};
+
+export const useUIStore = create<UIStore>((set, get) => ({
   popupOpen: false,
-  setPopupOpen: (open) => set({ popupOpen: open }),
-}))
+  popupLocked: false,
+
+  openPopup: () =>
+    set({
+      popupOpen: true,
+      popupLocked: false,
+    }),
+
+  closePopup: () => {
+    if (get().popupLocked) return; // BLOCK CLOSE
+    set({ popupOpen: false });
+  },
+
+  lockPopup: () => set({ popupLocked: true }),
+  unlockPopup: () => set({ popupLocked: false }),
+}));
